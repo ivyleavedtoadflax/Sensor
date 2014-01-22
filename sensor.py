@@ -9,6 +9,21 @@ from checkGmail import check
 from re import search
 import smtplib, string, os
 
+#	(ORANGE) 3.3v	[][]	5v (RED)
+#	I2C0 SDA		[][]	DO NOT CONNECT
+#	I2C0 SCL		[][]	GROUND (BLACK)
+#	(GREEN) GPIO 4	[][]	UART TXD
+#	DO NOT CONNECT	[][]	UART RXD
+#	(YELLOW) GPIO 17[][]	GPIO 18 (ORANGE)
+#	(BLUE) GPIO 21	[][]	DO NOT CONNECT
+#	(PURPLE) GPIO 22[][]	GPIO 23
+#	DO NOT CONNECT	[][]	GPIO 24
+#	SPI MOSI		[][]	DO NOT CONNECT
+#	SPI MISO		[][]	GPIO 25
+#	SPI SCLK		[][]	SP10 CEO N
+#	DO NOT CONNECT	[][]	SP10 CE1 N
+
+
 # Use Broadcom chip reference for GPIO
 GPIO.setmode(GPIO.BCM)
 
