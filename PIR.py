@@ -54,9 +54,9 @@ while True:
 			PIRlog.write("\n" + timestamp + "," + "HIGH" + "," + str(count))
 			PIRlog.close()
 		count = 0
-		PIRState = open("/home/pi/Sensor/PIRState", "w")
-		PIRState.write("0")
-		PIRState.close()
+		#PIRState = open("/home/pi/Sensor/PIRState", "w")
+		#PIRState.write("0")
+		#PIRState.close()
 		count1 += 0.1
 		sleep(0.1)
 		

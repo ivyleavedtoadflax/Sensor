@@ -131,7 +131,13 @@ while True:
 	except :
 		pass
 	
-	
+	# Reset PIRState
+
+	PIRState = open("/home/pi/Sensor/PIRState", "w")
+	PIRState.write("0")
+	PIRState.close()
+
+
 	# Check for log frequency
 
 	freq = open("logFreq","r")
