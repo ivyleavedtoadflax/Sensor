@@ -36,7 +36,7 @@ if (sum(
      
      
      
-     pdf("plots/Log.pdf",width=14,height=4.5)
+     png("/var/www/gfx/Log.png",width=8,height=4.5,unit="in",res=200)
      #png("plots/Log.png",width=7,height=4.5,units="in",res=200)
      
      #par(mfrow=c(1,2))

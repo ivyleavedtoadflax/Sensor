@@ -119,29 +119,25 @@ while True:
 	log.write("\n" + timestamp + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
 	log.close()
 
-	# Run R command to create plots
-	
-#	call('sudo R CMD BATCH TempPlot.R',shell=True)
-#	sleep(60)
-
-	# from checkGmail - check for emails
-
-	try :
-		check()
-	except :
-		pass
-	
 	# Reset PIRState
 
 	PIRState = open("/home/pi/Sensor/PIRState", "w")
 	PIRState.write("0")
 	PIRState.close()
 
-
 	# Check for log frequency
 
 	freq = open("logFreq","r")
 	logFreq = int(freq.read()) # check file for log frequency (in seconds)
 	freq.close()
+	
+		# Run R command to create plots
+#	counter = open("counter","w")
+#	counterInt = int(counter.read())
+#	if (counterInt < 20):
+#		counter.write(int(counterInt+1))
+#	else if (counterInt == 20):
+#		counter.write("0")
+#		call('sudo R CMD BATCH TempPlot.R',shell=True)
 
 	sleep(logFreq) # cancel this if running by crontab	
