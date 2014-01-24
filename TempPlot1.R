@@ -18,7 +18,7 @@ outputFiles<-list.files(getwd(), pattern="*.csv")
 
 if (sum(
      which(
-          (outputFiles == "DailyLog.csv")
+          (outputFiles == "Log.csv")
      ) == "0" ) )
 {
      
@@ -36,7 +36,7 @@ if (sum(
      
      
      
-     pdf("plots/DailyLog.pdf",width=7,height=4.5)
+     png("/var/www/gfx/DailyLog.png",width=7,height=4.5,units="in",res=200)
      #png("plots/Log.png",width=7,height=4.5,units="in",res=200)
      
      #par(mfrow=c(1,2))

@@ -132,12 +132,18 @@ while True:
 	freq.close()
 	
 		# Run R command to create plots
-#	counter = open("counter","w")
-#	counterInt = int(counter.read())
-#	if (counterInt < 20):
-#		counter.write(int(counterInt+1))
-#	else if (counterInt == 20):
-#		counter.write("0")
-#		call('sudo R CMD BATCH TempPlot.R',shell=True)
+	
+	# try :
+		# counter = open("counter","w")
+			
+		# else if (counterInt == 20):
+			# counter.write("0")
+			# call('sudo R CMD BATCH TempPlot.R',shell=True)
+	# except :
+		# pass
+		# counterInt = int(counter.read())
+		# if (counterInt < 20):
+			# counter.write(int(counterInt+1))
+	
 
 	sleep(logFreq) # cancel this if running by crontab	
