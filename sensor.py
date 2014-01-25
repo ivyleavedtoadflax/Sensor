@@ -133,17 +133,25 @@ while True:
 	
 		# Run R command to create plots
 	
-	# try :
-		# counter = open("counter","w")
-			
-		# else if (counterInt == 20):
-			# counter.write("0")
-			# call('sudo R CMD BATCH TempPlot.R',shell=True)
-	# except :
-		# pass
-		# counterInt = int(counter.read())
-		# if (counterInt < 20):
-			# counter.write(int(counterInt+1))
+	try :
+		counter = open("counter","r")
+		counterInt = counter.read()
+		counter.close()
+		matches = search("0-20", counterInt)
+		counter = open("counter","w")
+		
+		if (not matches) or (counterInt == 20):
+			counter.write("0")
+			call('sudo R CMD BATCH daily_temp_plot.R',shell=True)
+	 
+		if (counterInt < 20):
+			counter.write(str(int(counterInt)+1))
+		
+		counter.close()
+		
+	except:
+		pass
+
 	
 
 	sleep(logFreq) # cancel this if running by crontab	
