@@ -11,7 +11,7 @@ from email import Encoders
 import os
 
 USERNAME = "ivyleavedtoadflax@gmail.com"
-PASSWORD = "wpyyilflczbrnfzt"
+PASSWORD = "cdunxqfmuysysrls"
 
 def sendMail(to, subject, text, files=[]):
 
@@ -42,8 +42,7 @@ def sendMail(to, subject, text, files=[]):
 	server.sendmail(USERNAME, to, msg.as_string())
 	server.quit()
 
-
-# sendMail( ["matt.upson@btinternet.com"],
-        # "Temperature Log",
-        # "Temperature log graph attached",
-        # ["/home/pi/therm/plots/tempLog.pdf" , "/home/pi/therm/tempLog.csv"] ) # seperate files by comma
+ #sendMail( ["matt.upson@btinternet.com"],
+  #       "Camera Triggered",
+   #      "Bla",
+    #     ["/home/pi/Sensor/stills/thumbnails/*.jpg"] ) # seperate files by comma
