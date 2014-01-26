@@ -20,8 +20,8 @@ pin5 = 21
 # Setup outputs
 GPIO.setup(pin5, GPIO.IN)
 
-count = 0
-count1 = 0
+highCount = 0
+lowCount = 0
 
 print("Initialising PIR")
 
@@ -36,27 +36,30 @@ print("PIR initialised")
 
 while True: 
 	if (GPIO.input(pin5) == GPIO.HIGH):
-		if count1 > 0:
+		if lowCount > 0:
 			timestamp = strftime("%Y-%m-%d,%H:%M:%S")
 			PIRlog = open("/home/pi/Sensor/PIRLog.csv", "a")
-			PIRlog.write("\n" + timestamp + "," + "LOW" + "," + str(count1))
+			PIRlog.write("\n" + timestamp + "," + "LOW" + "," + str(lowCount))
 			PIRlog.close()
-		count1 = 0
+		if (lowCount > 50):  # 18000 milliseconds in 30 mins
+			call("raspistill -o /home/pi/Sensor/stills/timestamp.jpg -t 0", shell=True)
+		lowCount = 0
 		PIRState = open("/home/pi/Sensor/PIRState", "w")
 		PIRState.write("1")
 		PIRState.close()
-		count += 0.1
+		highCount += 0.1
 		sleep(0.1)	
 	else:
-		if count > 0:
+		if highCount > 0:
 			timestamp = strftime("%Y-%m-%d,%H:%M:%S")
 			PIRlog = open("/home/pi/Sensor/PIRLog.csv", "a")
-			PIRlog.write("\n" + timestamp + "," + "HIGH" + "," + str(count))
+			PIRlog.write("\n" + timestamp + "," + "HIGH" + "," + str(highCount))
 			PIRlog.close()
-		count = 0
+		highCount = 0
+		#Commented out below so that sensor.py returns writes to PIRState instead.
 		#PIRState = open("/home/pi/Sensor/PIRState", "w")
 		#PIRState.write("0")
 		#PIRState.close()
-		count1 += 0.1
+		lowCount += 0.1
 		sleep(0.1)
 		

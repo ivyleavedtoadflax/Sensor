@@ -27,6 +27,8 @@ while True:
 #		log.close()
 		count +=1
 		print(count)
+		if (count > 10):
+			call("raspistill -o /home/pi/Sensor/stills/timestamp.jpg -t 0", shell=True)
 		sleep(1)
 	else:
 #		log = open("/home/pi/therm/PIRState", "a")
