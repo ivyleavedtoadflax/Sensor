@@ -135,23 +135,23 @@ while True:
 	
 	try :
 		counter = open("counter","r")
-		counterInt = counter.read()
+		counterInt = int(counter.read())
 		counter.close()
-		matches = search("0-20", counterInt)
+		#matches = search("0-20", counterInt)
 		counter = open("counter","w")
 		
-		if (not matches) or (counterInt == 20):
+		#if (not matches) or (counterInt == 20):
+		if (counterInt == 10):
 			counter.write("0")
-			call('sudo R CMD BATCH daily_plot.R',shell=True)
+			#call('sudo R CMD BATCH daily_plot.R',shell=True)
 	 
-		if (counterInt < 20):
-			counter.write(str(int(counterInt)+1))
+		if (counterInt < 10):
+			counter.write(str(counterInt+1))
 		
 		counter.close()
 		
 	except:
 		pass
-
 	
 
 	sleep(logFreq) # cancel this if running by crontab	
