@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 from time import strftime
 from LEDinit import LEDinit
+from subprocess import call
 
 # Use Broadcom chip reference for GPIO
 GPIO.setmode(GPIO.BCM)
@@ -41,8 +42,8 @@ while True:
 			PIRlog = open("/home/pi/Sensor/PIRLog.csv", "a")
 			PIRlog.write("\n" + timestamp + "," + "LOW" + "," + str(lowCount))
 			PIRlog.close()
-		if (lowCount > 50):  # 18000 milliseconds in 30 mins
-			call("raspistill -o /home/pi/Sensor/stills/timestamp.jpg -t 0", shell=True)
+		#	if (lowCount > 50):  # 18000 milliseconds in 30 mins
+		#		call("raspistill -o /home/pi/Sensor/stills/timestamp.jpg -t 0", shell=True)
 		lowCount = 0
 		PIRState = open("/home/pi/Sensor/PIRState", "w")
 		PIRState.write("1")

@@ -143,7 +143,7 @@ while True:
 		#if (not matches) or (counterInt == 20):
 		if (counterInt == 10):
 			counter.write("0")
-			#call('sudo R CMD BATCH daily_plot.R',shell=True)
+			call('sudo R CMD BATCH daily_plot.R',shell=True)
 	 
 		if (counterInt < 10):
 			counter.write(str(counterInt+1))
