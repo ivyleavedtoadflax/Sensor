@@ -32,6 +32,7 @@ sleep(25)
 print("20 seconds...")
 sleep(20)
 
+
 print("5 seconds...")
 print("PIR initialised")
 
@@ -43,14 +44,14 @@ while True:
 			PIRlog = open("/home/pi/Sensor/PIRLog.csv", "a")
 			PIRlog.write("\n" + timestamp + "," + "LOW" + "," + str(lowCount))
 			PIRlog.close()
-		if (lowCount > 5):  # 6000 milliseconds in 30 mins
+		if (lowCount > 6000):  # 6000 milliseconds in 30 mins
 			call("raspistill -o /home/pi/Sensor/stills/img%01d.jpg -t 10000 -tl 1000 -q 50 -w 800 -h 600", shell=True)
-			stills.ConvertThumbs(5)
-			#stills.sendMail(["matt.upson@btinternet.com"],
-			stills.sendMail(["m.perezortola@gmail.com"],
+			stills.ConvertThumbs(1)
+			stills.sendMail(["matt.upson@btinternet.com"],
+			#stills.sendMail(["m.perezortola@gmail.com"],
 				"Camera Triggered",
 				"Bla",
-				["/home/pi/Sensor/stills/thumbnails/thumbs.zip"])
+				["/home/pi/Sensor/thumbsZip.zip"])
 		lowCount = 0
 		PIRState = open("/home/pi/Sensor/PIRState", "w")
 		PIRState.write("1")
