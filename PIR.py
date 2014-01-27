@@ -45,22 +45,12 @@ while True:
 			PIRlog.close()
 		if (lowCount > 5):  # 6000 milliseconds in 30 mins
 			call("raspistill -o /home/pi/Sensor/stills/img%01d.jpg -t 10000 -tl 1000 -q 50 -w 800 -h 600", shell=True)
-			ConvertThumbs(5)
-			sendMail(["matt.upson@btinternet.com"],
-			#sendMail(["m.perezortola@gmail.com"],
+			stills.ConvertThumbs(5)
+			#stills.sendMail(["matt.upson@btinternet.com"],
+			stills.sendMail(["m.perezortola@gmail.com"],
 				"Camera Triggered",
 				"Bla",
-				["/home/pi/Sensor/stills/thumbnails/thumbs00.jpg",
-				"/home/pi/Sensor/stills/thumbnails/thumbs01.jpg",
-				"/home/pi/Sensor/stills/thumbnails/thumbs02.jpg",
-				"/home/pi/Sensor/stills/thumbnails/thumbs03.jpg",
-				"/home/pi/Sensor/stills/thumbnails/thumbs04.jpg",
-				"/home/pi/Sensor/stills/thumbnails/thumbs05.jpg",
-				"/home/pi/Sensor/stills/thumbnails/thumbs06.jpg",
-				"/home/pi/Sensor/stills/thumbnails/thumbs07.jpg",
-				"/home/pi/Sensor/stills/thumbnails/thumbs08.jpg",
-				"/home/pi/Sensor/stills/thumbnails/thumbs09.jpg",
-				"/home/pi/Sensor/stills/thumbnails/thumbs10.jpg"])
+				["/home/pi/Sensor/stills/thumbnails/thumbs.zip"])
 		lowCount = 0
 		PIRState = open("/home/pi/Sensor/PIRState", "w")
 		PIRState.write("1")

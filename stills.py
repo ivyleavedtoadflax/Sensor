@@ -12,6 +12,7 @@ import os
 def TakeStills(n):
 	if (lowCount > n):  # 6000 milliseconds in 30 mins
 		call("raspistill -o /home/pi/Sensor/stills/img%01d.jpg -t 10000 -tl 1000 -q 50 -w 800 -h 600", shell=True)
+		call("zip /home/pi/Sensor/stills/thumbnails/thumbs /home/pi/Sensor/stills/thumbnails/*",shell=True)
 
 def ConvertThumbs(n):
 	sleep(5)
