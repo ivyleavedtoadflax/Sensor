@@ -46,7 +46,7 @@ while True:
 			PIRlog.close()
 		if (lowCount > 6000):  # 6000 milliseconds in 30 mins
 			call("raspistill -o /home/pi/Sensor/stills/img%01d.jpg -t 10000 -tl 1000 -q 50 -w 800 -h 600", shell=True)
-			stills.ConvertThumbs(1)
+			stills.ConvertThumbs(5)
 			stills.sendMail(["matt.upson@btinternet.com"],
 			#stills.sendMail(["m.perezortola@gmail.com"],
 				"Camera Triggered",
