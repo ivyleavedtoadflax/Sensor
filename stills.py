@@ -11,12 +11,14 @@ import os
 
 def TakeStills(n):
 	if (lowCount > n):  # 6000 milliseconds in 30 mins
-		call("raspistill -o /home/pi/Sensor/stills/img%01d.jpg -t 10000 -tl 1000 -q 50 -w 800 -h 600", shell=True)
-		call("zip -j thumbsZip /home/pi/Sensor/stills/thumbnails/*",shell=True)
+		call("raspistill -o /var/www/stills/img%01d.jpg -t 10000 -tl 1000 -q 50 -w 800 -h 600", shell=True)
+		
 
 def ConvertThumbs(n):
-	sleep(5)
-	call("convert -define jpeg:size=500x180 stills/*.jpg -auto-orient -thumbnail 300x -unsharp 0x.5 stills/thumbnails/thumbs0%d.jpg", shell=True)
+	sleep(n)
+	call("convert -define jpeg:size=500x180 /var/www/stills/*.jpg -auto-orient -thumbnail 300x -unsharp 0x.5 /var/www/stills/thumbnails/thumbs%d.jpg", shell=True)
+	sleep(n)
+	call("zip -j thumbsZip /var/www/stills/thumbnails/*",shell=True)
 
 USERNAME = "ivyleavedtoadflax@gmail.com"
 PASSWORD = "cdunxqfmuysysrls"
