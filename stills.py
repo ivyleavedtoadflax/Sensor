@@ -15,7 +15,7 @@ def TakeStills(n):
 		
 
 def ConvertThumbs(n):
-	call("rm /var/www/stills/thumbnails/*.jpg", shell=True)
+	call("sudo rm /var/www/stills/thumbnails/*.jpg", shell=True)
 	sleep(n)
 	call("convert -define jpeg:size=500x180 /var/www/stills/*.jpg -auto-orient -thumbnail 300x -unsharp 0x.5 /var/www/stills/thumbnails/thumbs%d.jpg", shell=True)
 	sleep(n)
