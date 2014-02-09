@@ -21,8 +21,12 @@ def ConvertThumbs(n):
 	sleep(n)
 	call("zip -j thumbsZip /var/www/stills/thumbnails/*",shell=True)
 
+PW = open("PWORD","r")
+PassWord = PW.read()
+PW.close()
+
 USERNAME = "ivyleavedtoadflax@gmail.com"
-PASSWORD = "cdunxqfmuysysrls"
+PASSWORD = PassWord
 	
 def sendMail(to, subject, text, files=[]):
 
