@@ -48,7 +48,6 @@ while True:
 			call("raspistill -o /var/www/stills/img%01d.jpg -t 10000 -tl 1000 -q 50 -w 800 -h 600", shell=True)
 			stills.ConvertThumbs(5)
 			stills.sendMail(["matt.upson@btinternet.com"],
-			#stills.sendMail(["m.perezortola@gmail.com"],
 				"Camera Triggered",
 				"Bla",
 				["/home/pi/Sensor/thumbsZip.zip"])

@@ -144,9 +144,9 @@ while True:
 		if (counterInt == 10):
 			counter.write("0")
 			call('sudo R CMD BATCH daily_plot.R',shell=True)
-			RPlotLog = open("/home/pi/Sensor/RPlotLog.csv", "a")
-			RPlotLog.write(timestamp + "\n")
-			RPlotLog.close()
+			# RPlotLog = open("/home/pi/Sensor/RPlotLog.csv", "a")
+			# RPlotLog.write(timestamp + "\n")
+			# RPlotLog.close()
 	 
 		if (counterInt < 10):
 			counter.write(str(counterInt+1))
