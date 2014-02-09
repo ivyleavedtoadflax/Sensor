@@ -11,13 +11,13 @@ import os
 
 def TakeStills(n):
 	if (lowCount > n):  # 6000 milliseconds in 30 mins
-		call("raspistill -o /var/www/stills/img%01d.jpg -t 10000 -tl 1000 -q 50 -w 800 -h 600", shell=True)
+		call("raspistill -o /var/www/stills/img%1d.jpg -t 10000 -tl 1000 -q 50 -w 800 -h 600", shell=True)
 		
 
 def ConvertThumbs(n):
 	call("sudo rm /var/www/stills/thumbnails/*.jpg", shell=True)
 	sleep(n)
-	call("convert -define jpeg:size=500x180 /var/www/stills/*.jpg -auto-orient -thumbnail 300x -unsharp 0x.5 /var/www/stills/thumbnails/thumbs%01d.jpg", shell=True)
+	call("convert -define jpeg:size=500x180 null /var/www/stills/*.jpg -auto-orient -thumbnail 300x -unsharp 0x.5 /var/www/stills/thumbnails/thumbs%1d.jpg; rm thumbs0.jpg", shell=True)
 	sleep(n)
 	call("zip -j thumbsZip /var/www/stills/thumbnails/*",shell=True)
 
