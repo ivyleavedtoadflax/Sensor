@@ -24,5 +24,5 @@ cd /home/pi/Sensor/
 
 nohup sudo python /home/pi/Sensor/sensor.py &
 nohup sudo python /home/pi/Sensor/PIR.py &
-
+nohup sudo python /home/pi/Sensor/raspiLapseCam.py &
 exit 0

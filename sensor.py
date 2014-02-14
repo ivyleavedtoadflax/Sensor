@@ -61,13 +61,13 @@ while True:
 
 # Get reading from temperature sensor
 
-#	tfile = open("/sys/bus/w1/devices/28-00000457fd20/w1_slave","r") # Open temperature sensor file
-#	text = tfile.read() # Read all of the text in the file.
-#	tfile.close() # Close the file now that the text has been read.
-#	secondline = text.split("\n")[1] # Split the text with new lines (\n) and select the second line.
-#	temperaturedata = secondline.split(" ")[9] # Split the line into words, referring to the spaces, and select the 10th word $
-#	temperature = float(temperaturedata[2:]) # The first two characters are "t=", so get rid of those and convert the temper$
-#	temperature = temperature / 1000 # Put the decimal point in the right place and display it.
+	tfile = open("/sys/bus/w1/devices/28-00000457fd20/w1_slave","r") # Open temperature sensor file
+	text = tfile.read() # Read all of the text in the file.
+	tfile.close() # Close the file now that the text has been read.
+	secondline = text.split("\n")[1] # Split the text with new lines (\n) and select the second line.
+	temperaturedata = secondline.split(" ")[9] # Split the line into words, referring to the spaces, and select the 10th word $
+	temperature = float(temperaturedata[2:]) # The first two characters are "t=", so get rid of those and convert the temper$
+	temperature = temperature / 1000 # Put the decimal point in the right place and display it.
 	
 # read Pi core temp
 
@@ -116,7 +116,7 @@ while True:
 	# log data in text file
 	
 	log = open("Log.csv", "a")
-	log.write("\n" + timestamp + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
+	log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
 	log.close()
 
 	# Reset PIRState
@@ -141,9 +141,10 @@ while True:
 		counter = open("counter","w")
 		
 		#if (not matches) or (counterInt == 20):
-		if (counterInt == 10):
+		if (counterInt == 20):
 			counter.write("0")
 			call('sudo R CMD BATCH daily_plot.R',shell=True)
+			#call("raspistill -o /var/www/stills/img%04d.jpg -t 10000 -tl 1000 -q 50 -w 800 -h 600", shell=True)
 			# RPlotLog = open("/home/pi/Sensor/RPlotLog.csv", "a")
 			# RPlotLog.write(timestamp + "\n")
 			# RPlotLog.close()
