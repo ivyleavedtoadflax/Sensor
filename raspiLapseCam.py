@@ -67,12 +67,6 @@ initMins = "%02d" % (d.minute)
 folderToSave = "/var/www/stills/" + str(initYear) + str(initMonth) + str(initDate) + str(initHour) + str(initMins)
 os.mkdir(folderToSave)
 
-try:
-	folderToSave = "media/usb/" + str(initYear) + str(initMonth) + str(initDate) + str(initHour) + str(initMins)
-	os.mkdir(folderToSave)
-except:
-	pass
-
 # Set the initial serial for saved images to 1
 fileSerial = 1
 
@@ -98,10 +92,10 @@ while True:
         # Change these settings where you see fit and to suit the conditions you are using the camera in
         os.system("raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + str(folderToSave) + "/" + str(fileSerialNumber) + "_" + str(hour) + str(mins) +  ".jpg  -sh 40 -awb auto -mm average -v")
 		
-		try:
-			os.system("raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/media/usb/" +str(folderToSave) + "/" + str(fileSerialNumber) + "_" + str(hour) + str(mins) +  ".jpg  -sh 40 -awb auto -mm average -v")
-		except:
-			pass
+	try:
+		os.system("sudo raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/media/usb/" + str(fileSerialNumber) + "_" + str(hour) + str(mins) +  ".jpg  -sh 40 -awb auto -mm average -v")
+	except:
+		pass
 			
         # Increment the fileSerial
         fileSerial += 1
@@ -110,10 +104,6 @@ while True:
 		#stillFreq = int(freq.read()) # check file for log frequency (in seconds)
 		#freq.close()
 		
-		try:
-			os.system("git pull backup Glasshouse")
-		except:
-			pass
 		
         # Wait 60 seconds (1 minute) before next capture
         time.sleep(60)
