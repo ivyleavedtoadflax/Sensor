@@ -117,7 +117,14 @@ while True:
 	
 	log = open("Log.csv", "a")
 	log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
-	log.close()
+	log.close
+	
+	try:
+		wwwlog = open("/media/usb/log.csv", "a")
+		wwwlog.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
+		wwwlog.close()
+	except:
+		pass
 
 	# Reset PIRState
 
