@@ -64,8 +64,8 @@ initMins = "%02d" % (d.minute)
 # Define the location where you wish to save files. Set to HOME as default. 
 # If you run a local web server on Apache you could set this to /var/www/ to make them 
 # accessible via web browser.
-folderToSave = "/var/www/stills/" + str(initYear) + str(initMonth) + str(initDate) + str(initHour) + str(initMins)
-os.mkdir(folderToSave)
+folderToSave = str(initYear) + str(initMonth) + str(initDate) + str(initHour) + str(initMins)
+#os.mkdir(folderToSave)
 
 # Set the initial serial for saved images to 1
 fileSerial = 1
@@ -90,10 +90,10 @@ while True:
         
         # Capture the image using raspistill. Set to capture with added sharpening, auto white balance and average metering mode
         # Change these settings where you see fit and to suit the conditions you are using the camera in
-        os.system("raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + str(folderToSave) + "/" + str(fileSerialNumber) + "_" + str(hour) + str(mins) +  ".jpg  -sh 40 -awb auto -mm average -v")
+        os.system("raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/var/www/stills/" + str(folderToSave) + "_" + str(hour) + str(mins) + "_" str(fileSerialNumber) +  ".jpg  -sh 40 -awb auto -mm average -v")
 		
 	try:
-		os.system("sudo raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/media/usb/" + str(fileSerialNumber) + "_" + str(hour) + str(mins) +  ".jpg  -sh 40 -awb auto -mm average -v")
+		os.system("sudo raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/media/usb/" + str(folderToSave) + "_" + str(hour) + str(mins) + "_" str(fileSerialNumber) +  ".jpg  -sh 40 -awb auto -mm average -v")
 	except:
 		pass
 			
