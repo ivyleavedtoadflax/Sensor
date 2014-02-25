@@ -121,7 +121,7 @@ while True:
 	# log data in text file
 	
 	log = open("Log.csv", "a")
-	log.write("\n" + timestamp + "," str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
+	log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
 	log.close()
 
 	# Reset PIRState
