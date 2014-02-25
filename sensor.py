@@ -60,15 +60,18 @@ while True:
 		ledCount +=1
 
 # Get reading from temperature sensor
+	temperature = "NA"
+	try:
+		tfile = open("/sys/bus/w1/devices/28-00000457fd20/w1_slave","r") # Open temperature sensor file
+		text = tfile.read() # Read all of the text in the file.
+		tfile.close() # Close the file now that the text has been read.
+		secondline = text.split("\n")[1] # Split the text with new lines (\n) and select the second line.
+		temperaturedata = secondline.split(" ")[9] # Split the line into words, referring to the spaces, and select the 10th word $
+		temperature = float(temperaturedata[2:]) # The first two characters are "t=", so get rid of those and convert the temper$
+		temperature = temperature / 1000 # Put the decimal point in the right place and display it.
+	except:
+		pass
 
-	tfile = open("/sys/bus/w1/devices/28-00000457fd20/w1_slave","r") # Open temperature sensor file
-	text = tfile.read() # Read all of the text in the file.
-	tfile.close() # Close the file now that the text has been read.
-	secondline = text.split("\n")[1] # Split the text with new lines (\n) and select the second line.
-	temperaturedata = secondline.split(" ")[9] # Split the line into words, referring to the spaces, and select the 10th word $
-	temperature = float(temperaturedata[2:]) # The first two characters are "t=", so get rid of those and convert the temper$
-	temperature = temperature / 1000 # Put the decimal point in the right place and display it.
-	
 # read Pi core temp
 
 #	coreTempLog = open("/sys/class/thermal/thermal_zone0/temp","r")
@@ -139,7 +142,7 @@ while True:
 	freq.close()
 	
 		# Run R command to create plots
-	
+		
 	try :
 		counter = open("counter","r")
 		counterInt = int(counter.read())
