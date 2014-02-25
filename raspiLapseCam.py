@@ -90,10 +90,10 @@ while True:
         
         # Capture the image using raspistill. Set to capture with added sharpening, auto white balance and average metering mode
         # Change these settings where you see fit and to suit the conditions you are using the camera in
-        os.system("raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/var/www/stills/" + str(folderToSave) + "_" + str(hour) + str(mins) + "_" str(fileSerialNumber) +  ".jpg  -sh 40 -awb auto -mm average -v")
+        os.system("raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/var/www/stills/" + str(folderToSave) + "_" + str(hour) + str(mins) + "_" + str(fileSerialNumber) +  ".jpg  -sh 40 -awb auto -mm average -v")
 		
 	try:
-		os.system("sudo raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/media/usb/" + str(folderToSave) + "_" + str(hour) + str(mins) + "_" str(fileSerialNumber) +  ".jpg  -sh 40 -awb auto -mm average -v")
+		os.system("sudo raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/media/usb/" + str(folderToSave) + "_" + str(hour) + str(mins) + "_" + str(fileSerialNumber) +  ".jpg  -sh 40 -awb auto -mm average -v")
 	except:
 		pass
 			

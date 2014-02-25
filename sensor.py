@@ -159,7 +159,7 @@ while True:
 			# RPlotLog.write(timestamp + "\n")
 			# RPlotLog.close()
 	 
-		if (counterInt < 10):
+		if (counterInt < 20):
 			counter.write(str(counterInt+1))
 		
 		counter.close()
