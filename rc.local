@@ -22,8 +22,8 @@ sudo modprobe w1-therm
 
 cd /home/pi/Sensor/
 
-nohup sudo python /home/pi/Sensor/pifind.py &
+nohup sudo python /home/pi/Sensor/pifind.py >dev/null 2>&1&
 nohup sudo python /home/pi/Sensor/sensor.py &
 nohup sudo python /home/pi/Sensor/PIR.py &
-nohup sudo python /home/pi/Sensor/raspiLapseCam.py &
+nohup sudo python /home/pi/Sensor/raspiLapseCam.py >/dev/null 2>&1&
 exit 0

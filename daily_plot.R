@@ -18,9 +18,9 @@ require(zoo)
 	"date",
 	"time",
 	"temp1",
+	"temp2",
 	"light1",
 	# "coreTemp",
-	# "temp2",
 	"humidity",
 	"PIR"
 )
@@ -35,10 +35,10 @@ a$timestamp <- chron(a$date,a$time)
      
 	# Use just the current 24 hours!
      
-a <- subset(a,date == as.chron(CurDate))
+#a <- subset(a,date == as.chron(CurDate))
 	 
 temp1 <- subset(a,temp1 > 0 & temp1 < 100,c(timestamp,temp1,PIR))
-#temp2 <- subset(a,temp2 > 0 & temp2 < 100,c(timestamp,temp2,PIR))
+temp2 <- subset(a,temp2 > 0 & temp2 < 100,c(timestamp,temp2,PIR))
 #coreTemp <- subset(a,coreTemp > 0 & coreTemp < 100,c(timestamp,coreTemp))
 humidity <- subset(a,humidity > 0 & humidity < 100,c(timestamp,humidity,PIR))
 light1 <- subset(a,light1 > 0 ,c(timestamp,light1,PIR)) # this has been changed!
@@ -52,13 +52,13 @@ humidityPIR <- subset(humidity,PIR > 0, c(timestamp,humidity))
      
 tempMax <- max(
 	#max(coreTemp$coreTemp-25),
-	#max(temp2$temp2),
+	max(temp2$temp2),
 	max(temp1$temp1)
 ) # * 1.025
 				
 tempMin <- min(
 	#min(coreTemp$coreTemp-25),
-	#min(temp1$temp1),
+	min(temp2$temp2),
 	min(temp1$temp1)
 ) # * 1.025
      
@@ -106,6 +106,20 @@ points(
     temp1$temp1,
     col = "blue",
     type = "l"
+)
+
+points(
+    temp2$timestamp,
+    temp2$temp2,
+    col = "red",
+    type = "l"
+)
+
+legend(
+	"topleft",
+	legend = c("Internal","External"),
+	fill = c("red","blue"),
+	bty = "n"
 )
  
 dev.off()

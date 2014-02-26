@@ -64,7 +64,7 @@ initMins = "%02d" % (d.minute)
 # Define the location where you wish to save files. Set to HOME as default. 
 # If you run a local web server on Apache you could set this to /var/www/ to make them 
 # accessible via web browser.
-folderToSave = str(initYear) + str(initMonth) + str(initDate) + str(initHour) + str(initMins)
+folderToSave = str(initYear) + str(initMonth) + str(initDate)
 #os.mkdir(folderToSave)
 
 # Set the initial serial for saved images to 1
@@ -106,7 +106,7 @@ while True:
 		
 		
         # Wait 60 seconds (1 minute) before next capture
-        time.sleep(60)
+        time.sleep(1800)
         
     else:
         
