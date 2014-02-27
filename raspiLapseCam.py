@@ -54,17 +54,17 @@ import RPi.GPIO as GPIO
 from datetime import datetime
 
 # Grab the current datetime which will be used to generate dynamic folder names
-d = datetime.now()
-initYear = "%04d" % (d.year) 
-initMonth = "%02d" % (d.month) 
-initDate = "%02d" % (d.day)
-initHour = "%02d" % (d.hour)
-initMins = "%02d" % (d.minute)
+# d = datetime.now()
+# initYear = "%04d" % (d.year) 
+# initMonth = "%02d" % (d.month) 
+# initDate = "%02d" % (d.day)
+# initHour = "%02d" % (d.hour)
+# initMins = "%02d" % (d.minute)
 
 # Define the location where you wish to save files. Set to HOME as default. 
 # If you run a local web server on Apache you could set this to /var/www/ to make them 
 # accessible via web browser.
-folderToSave = str(initYear) + str(initMonth) + str(initDate)
+# folderToSave = str(initYear) + str(initMonth) + str(initDate)
 #os.mkdir(folderToSave)
 
 # Set the initial serial for saved images to 1
@@ -73,42 +73,48 @@ fileSerial = 1
 # Run a WHILE Loop of infinitely
 while True:
     
-    d = datetime.now()
-    if d.hour:
+	d = datetime.now()
+    # if d.hour:
         
-        # Set FileSerialNumber to 000X using four digits
-        fileSerialNumber = "%04d" % (fileSerial)
-        
-        # Capture the CURRENT time (not start time as set above) to insert into each capture image filename
-        hour = "%02d" % (d.hour)
-        mins = "%02d" % (d.minute)
-        
-        # Define the size of the image you wish to capture. 
-        imgWidth = 800 # Max = 2592 
-        imgHeight = 600 # Max = 1944
-        print " ====================================== Saving file at " + hour + ":" + mins
-        
-        # Capture the image using raspistill. Set to capture with added sharpening, auto white balance and average metering mode
-        # Change these settings where you see fit and to suit the conditions you are using the camera in
-        os.system("raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/var/www/stills/" + str(folderToSave) + "_" + str(hour) + str(mins) + "_" + str(fileSerialNumber) +  ".jpg  -sh 40 -awb auto -mm average -v")
-		
+	# Set FileSerialNumber to 000X using four digits
+	fileSerialNumber = "%04d" % (fileSerial)
+	
+	# Capture the CURRENT time (not start time as set above) to insert into each capture image filename
+	
+	year = "%02d" % (d.year)
+	month = "%02d" % (d.month)
+	day = "%02d" % (d.day)
+	hour = "%02d" % (d.hour)
+	mins = "%02d" % (d.minute)
+	
+	fileName = str(year) + str(month) + str(day) + "_" + str(hour) + str(mins) + "_" + fileSerialNumber + ".jpg"
+	
+	# Define the size of the image you wish to capture. 
+	imgWidth = 800 # Max = 2592 
+	imgHeight = 600 # Max = 1944
+	print " ====================================== Saving file at " + hour + ":" + mins
+	
+	# Capture the image using raspistill. Set to capture with added sharpening, auto white balance and average metering mode
+	# Change these settings where you see fit and to suit the conditions you are using the camera in
+	os.system("raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/var/www/stills/" + fileName + " -sh 40 -awb auto -mm average -v")
+	
 	try:
-		os.system("sudo raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/media/usb/" + str(folderToSave) + "_" + str(hour) + str(mins) + "_" + str(fileSerialNumber) +  ".jpg  -sh 40 -awb auto -mm average -v")
+		os.system("sudo raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + "/media/usb/" + fileName + " -sh 40 -awb auto -mm average -v")
 	except:
 		pass
 			
-        # Increment the fileSerial
-        fileSerial += 1
+	# Increment the fileSerial
+	fileSerial += 1
+	
+	#freq = open("/home/pi/Sensor/stillFreq","r")
+	#stillFreq = int(freq.read()) # check file for log frequency (in seconds)
+	#freq.close()
+	
+	
+	# Wait 60 seconds (1 minute) before next capture
+	time.sleep(600)
         
-		#freq = open("/home/pi/Sensor/stillFreq","r")
-		#stillFreq = int(freq.read()) # check file for log frequency (in seconds)
-		#freq.close()
-		
-		
-        # Wait 60 seconds (1 minute) before next capture
-        time.sleep(1800)
+    # else:
         
-    else:
-        
-        # Just trapping out the WHILE Statement
-        print " ====================================== Doing nothing at this time"
+        #Just trapping out the WHILE Statement
+        # print " ====================================== Doing nothing at this time"
