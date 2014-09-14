@@ -1,3 +1,4 @@
+
 # Load packages
 
 require(chron)
@@ -18,9 +19,8 @@ require(zoo)
 	"date",
 	"time",
 	"temp1",
+	"temp2",
 	"light1",
-	# "coreTemp",
-	# "temp2",
 	"humidity",
 	"PIR"
 )

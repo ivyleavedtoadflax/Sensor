@@ -101,7 +101,7 @@ while True:
 		humidity = float(matches.group(1))
 		break
 	
-# Get reading from photoreceptor
+	# Get reading from photoreceptor
 
 	light = 0
 	
