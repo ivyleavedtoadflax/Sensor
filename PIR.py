@@ -51,6 +51,7 @@ while True:
 				"Camera Triggered",
 				"Bla",
 				["/home/pi/Sensor/thumbsZip.zip"])
+				#["/home/pi/Sensor/thumbsZip.zip","/home/pi/Sensor/Log.csv"]
 		lowCount = 0
 		PIRState = open("/home/pi/Sensor/PIRState", "w")
 		PIRState.write("1")
