@@ -3,17 +3,22 @@
 
 require(chron)
 require(zoo)
+require(testthat)
 # require(ggplot2) # doesn't support chron objects at present
 
-     
- #par(mfrow=c(1,2))
-     
- a<-read.csv("Log.csv",header=FALSE,sep=",")
+ a <- read.csv(
+   "Log.csv", 
+   header = FALSE, 
+   sep = ","
+   )
      
  CurTime <- Sys.time()
  CurDate <- Sys.Date()
      
- a[,1:2] <- cbind(as.character(a[,1]),as.character(a[,2]))
+ a[,1:2] <- cbind(
+   as.character(a[,1]), 
+   as.character(a[,2])
+   )
      
  colnames(a) <- c(
 	"date",
@@ -26,19 +31,34 @@ require(zoo)
 )
      
 	# convert date and time to chron objects
-     
-     
-     
-a$date <- dates(as.character(a$date),format = "y-m-d")
-a$time <- times(as.character(a$time),format = "h:m:s")
-a$timestamp <- chron(a$date,a$time)
+   
+a$date <- dates(
+  as.character(a$date), 
+  format = "y-m-d"
+  )
+
+a$time <- times(
+  as.character(a$time), 
+  format = "h:m:s"
+  )
+
+a$timestamp <- chron(
+  a$date, 
+  a$time
+  )
      
 	# Use just the current 24 hours!
      
-a <- subset(a,date == as.chron(CurDate))
+a <- subset(
+  a, 
+  date == as.chron(CurDate)
+  )
+
+#Create subsets for plotting - actually this would be much better in dplyr,
+#however the R version available on the Rpi does not support dplyr
 	 
 temp1 <- subset(a,temp1 > 0 & temp1 < 100,c(timestamp,temp1,PIR))
-#temp2 <- subset(a,temp2 > 0 & temp2 < 100,c(timestamp,temp2,PIR))
+temp2 <- subset(a,temp2 > 0 & temp2 < 100,c(timestamp,temp2,PIR))
 #coreTemp <- subset(a,coreTemp > 0 & coreTemp < 100,c(timestamp,coreTemp))
 humidity <- subset(a,humidity > 0 & humidity < 100,c(timestamp,humidity,PIR))
 light1 <- subset(a,light1 > 0 ,c(timestamp,light1,PIR)) # this has been changed!
@@ -65,7 +85,13 @@ tempMin <- min(
 #tempMax<-max(temp1$temp1) #*1.025
 #tempMin<-min(temp1$temp1) #*0.975
      
-png("/var/www/gfx/daily_temp_plot.png",width=6,height=4.5,units="in",res=200)	 
+png(
+  "/var/www/gfx/daily_temp_plot.png", 
+  width = 6, 
+  height = 4.5, 
+  units = "in", 
+  res = 200
+  )	 
 	 
 par(
 	mar = c( 5.1, 4.1, 3.1, 4.1),
@@ -106,6 +132,14 @@ points(
     temp1$temp1,
     col = "blue",
     type = "l"
+)
+
+points(
+  temp2$timestamp,
+  temp2$temp2,
+  col = "blue",
+  type = "l",
+  lty = 2
 )
  
 dev.off()

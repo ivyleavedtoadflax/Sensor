@@ -2,3 +2,4 @@
 *.RData
 *.ROut
 PWORD
+.Rproj.user
