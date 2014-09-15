@@ -72,13 +72,13 @@ humidityPIR <- subset(humidity,PIR > 0, c(timestamp,humidity))
      
 tempMax <- max(
 	#max(coreTemp$coreTemp-25),
-	#max(temp2$temp2),
+	max(temp2$temp2),
 	max(temp1$temp1)
 ) # * 1.025
 				
 tempMin <- min(
 	#min(coreTemp$coreTemp-25),
-	#min(temp1$temp1),
+	min(temp2$temp2),
 	min(temp1$temp1)
 ) # * 1.025
      
