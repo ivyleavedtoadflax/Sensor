@@ -6,6 +6,12 @@ require(zoo)
 require(testthat)
 # require(ggplot2) # doesn't support chron objects at present
 
+args <- commandArgs(trailingOnly = TRUE)
+
+# input date arguments from console
+
+expect_that(is.vector(args),is.equal)
+
  a <- read.csv(
    "Log.csv", 
    header = FALSE, 
@@ -48,11 +54,28 @@ a$timestamp <- chron(
   )
      
 	# Use just the current 24 hours!
-     
-#a <- subset(
-#  a, 
-#  date == as.chron(CurDate)
-#  )
+ if (is.character(args[,1])) {
+
+if (args[,1] == "today") {
+
+a <- subset(
+  a, 
+  date == as.chron(CurDate)
+  )
+
+}
+} else if (is.numeric(args[,1])) {
+
+# regex better here
+
+a <- a,
+date > as.chron(
+paste(
+args[,1][,5:8],"-",args[,1][,3:4],"-",args[,1][1:2]
+)
+
+}
+
 
 #Create subsets for plotting - actually this would be much better in dplyr,
 #however the R version available on the Rpi does not support dplyr
