@@ -148,7 +148,7 @@ while True:
 		#if (not matches) or (counterInt == 20):
 		if (counterInt == 10):
 			counter.write("0")
-			call('sudo R CMD BATCH daily_plot.R',shell=True)
+			call('sudo Rscript ~/Sensor/daily_plot1.R all',shell=True)
 			# RPlotLog = open("/home/pi/Sensor/RPlotLog.csv", "a")
 			# RPlotLog.write(timestamp + "\n")
 			# RPlotLog.close()

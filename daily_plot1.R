@@ -4,17 +4,18 @@ args <- commandArgs(trailingOnly = TRUE)
 # Load packages
 
 require(chron)
-require(zoo)
+#require(zoo) # only required for rolling mean
 require(testthat)
 require(methods)
 
 # require(ggplot2) # doesn't support chron objects at present
 
-expect_is(
-  args, 
-  "character", 
-  info = "Arguments are not a vector of character objects"
-)
+#expect_is(
+#  args, 
+#  "character", 
+#  info = "Arguments are not a vector of character objects"
+#)
+
 
 a <- read.csv(
   "Log.csv", 
@@ -78,9 +79,7 @@ if (args[1] == "all") {
   
   message("Using whole time sequence.")
   
-}
-
-if (args[1] == "today") {
+} else if (args[1] == "today") {
   
   a <- subset(
     a, 
@@ -120,17 +119,17 @@ message(
 )
 
 
-} else if (attr(regexpr("^\\d+$",args[1]), "match.length") <= 4) {
+} else if (attr(regexpr("\\d+",args[1]), "match.length") <= 4) {
   
   a <- subset(
     a,
-    date = (CurDate - args[1])
+    date = (CurDate - as.numeric(args[1]))
   )
   
   message(
     paste(
       "Using only data from ",
-      CurDate - args[1],
+      CurDate - as.numeric(args[1]),
       ".",
       sep = ""
     )  
@@ -224,7 +223,7 @@ points(
   temp2$temp2,
   col = "blue",
   type = "l",
-  lty = 2
+  lty = 3
 )
 
 dev.off()
@@ -313,5 +312,3 @@ points(
 #axis(side=2,at=seq(0,-20,-2),labels=rev(seq(0,20,2)),las = 2, cex.axis = 0.75,lwd = 0.5)
 
 dev.off()
-
-
