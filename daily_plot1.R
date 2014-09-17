@@ -27,7 +27,7 @@ test_that(
 {
   expect_that(as.character(a[,1]),matches("^\\d+\\-\\d+\\-\\d+$"))
   expect_that(as.character(a[,2]),matches("^\\d+\\:\\d+\\:\\d+$"))
-  expect_that(as.character(a[,3]),matches("^\\d+\\.\\d+$"))
+  expect_that(na.omit(as.character(a[,3])),matches("^\\d+\\.\\d+$"))
   expect_that(as.character(a[,4]),matches("^\\d+\\.\\d+$"))
   expect_that(as.character(a[,5]),matches("^\\d+"))
   expect_that(as.character(a[,6]),matches("^\\d+\\.?\\d+"))
