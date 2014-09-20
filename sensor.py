@@ -160,7 +160,7 @@ while True:
 		#if (not matches) or (counterInt == 20):
 		if (counterInt == 10):
 			counter.write("0")
-			db.uploadLog("/var/www/Log.db","/R/Sensor/Log.db")
+			db.uploadLog("/var/www/Log.db","Log.db")
 			call('sudo R CMD BATCH daily_plot.R', shell = True)
 			# RPlotLog = open("/home/pi/Sensor/RPlotLog.csv", "a")
 			# RPlotLog.write(timestamp + "\n")
