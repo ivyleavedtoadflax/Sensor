@@ -16,7 +16,7 @@ access_token = access_token.strip()
 # Check that we have access:
 
 client = dropbox.client.DropboxClient(access_token)
-print 'linked account: ', client.account_info()
+#print 'linked account: ', client.account_info()
 
 f = open('/var/www/Log.db','rb')
-response = client.put_file('/R/Sensor/Log.db', f)
+response = client.put_file('/R/Sensor/Log.db', f, overwrite=True)
