@@ -116,13 +116,23 @@ while True:
 	present = PIR.read()
 	PIR.close()
 
-	timestamp = strftime("%Y-%m-%d,%H:%M:%S")
+	timestamp = strftime("%Y-%m-%d %H:%M:%S")
 	
 	# log data in text file
 	
 	log = open("Log.csv", "a")
 	log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
 	log.close()
+
+	# Log into /www/var/Log.db - sqlite3 database
+
+	conn=sqlite3.connect("/var/www/Log.db")
+	curs=conn.cursor()
+
+	curs.execute("INSERT INTO temp values('" + str(timestamp) + "','" + str(temperature) + "','" + str(temperature1) + "','" + str(light) + "','" +  str(humidity) + "','" +  str(present) + "')")
+
+	conn.commit()
+	conn.close()
 
 	# Reset PIRState
 
