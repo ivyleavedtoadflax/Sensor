@@ -11,8 +11,18 @@ from math import log
 
 def daily_plot():
 
-	logNames = ['date','time','temp1','temp2','light','humidity','PIR']
-	logTab = pd.read_table('Log.csv', sep = ',', header = None,  names = logNames)
+	#logNames = ['date','time','temp1','temp2','light','humidity','PIR']
+	#logTab = pd.read_table('Log.csv', sep = ',', header = None,  names = logNames)
+
+	#or read it from the database?
+
+	conn=sqlite3.connect("var/www/Log.db")
+	curs=conn.cursor()
+
+	logTab = pd.DataFrame(curs.execute("select * from temp;").fetchall())
+	logTab = ['timestamp','temp1','temp2','light','humidity','PIR']
+	
+	conn.close()	
 
 	# Convert date and time to timeseries object...
 	# I think these values are separated in the original sensor.py
