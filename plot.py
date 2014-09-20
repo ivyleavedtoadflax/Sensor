@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-#import pandas as pd
-#import numpy as np
-#import matplotlib.pyplot as plt
-#import datetime as dt
-#import scipy as sci
-#from math import log
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import datetime as dt
+import scipy as sci
+from math import log
 
 # Load the data as a dataframe
 
@@ -57,3 +57,5 @@ def daily_plot():
 
 	#plt.savefig("/var/www/gfx/daily_temp_plot.png")
 	plt.savefig("test.png")
+
+daily_plot()
