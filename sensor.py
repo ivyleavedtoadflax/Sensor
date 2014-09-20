@@ -7,7 +7,7 @@ from subprocess import call
 from subprocess import check_output
 from checkGmail import check
 from re import search
-import smtplib, string, os
+import smtplib, string, os, sqlite3
 
 #	(ORANGE) 3.3v	[][]	5v (RED)
 #	I2C0 SDA	[][]	DO NOT CONNECT
