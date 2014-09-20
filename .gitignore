@@ -4,3 +4,6 @@
 PWORD
 .Rproj.user
 Log.csv
+access_token
+db_app_key
+db_app_secret
