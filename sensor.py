@@ -7,7 +7,7 @@ from subprocess import call
 from subprocess import check_output
 from checkGmail import check
 from re import search
-import smtplib, string, os, sqlite3
+import smtplib, string, os, sqlite3, db
 
 #	(ORANGE) 3.3v	[][]	5v (RED)
 #	I2C0 SDA	[][]	DO NOT CONNECT
@@ -42,6 +42,8 @@ GPIO.setup(pin1, GPIO.OUT)
 GPIO.setup(pin2, GPIO.OUT)
 GPIO.setup(pin4, GPIO.OUT)
 # GPIO.setup(pin5, GPIO.IN)
+
+db.uploadLog("/var/www/Log.db","Log.db")
 
 while True:
 
@@ -158,6 +160,7 @@ while True:
 		#if (not matches) or (counterInt == 20):
 		if (counterInt == 10):
 			counter.write("0")
+			db.uploadLog("/var/www/Log.db","/R/Sensor/Log.db")
 			call('sudo R CMD BATCH daily_plot.R', shell = True)
 			# RPlotLog = open("/home/pi/Sensor/RPlotLog.csv", "a")
 			# RPlotLog.write(timestamp + "\n")
