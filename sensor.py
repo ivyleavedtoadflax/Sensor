@@ -8,6 +8,7 @@ from subprocess import check_output
 from checkGmail import check
 from re import search
 import smtplib, string, os
+import plot
 
 #	(ORANGE) 3.3v	[][]	5v (RED)
 #	I2C0 SDA	[][]	DO NOT CONNECT
@@ -42,6 +43,13 @@ GPIO.setup(pin1, GPIO.OUT)
 GPIO.setup(pin2, GPIO.OUT)
 GPIO.setup(pin4, GPIO.OUT)
 # GPIO.setup(pin5, GPIO.IN)
+
+# Try to plot the data as it exists:
+
+try:
+	plot.daily_plot()
+except:
+	pass
 
 while True:
 
@@ -148,7 +156,7 @@ while True:
 		#if (not matches) or (counterInt == 20):
 		if (counterInt == 10):
 			counter.write("0")
-			call('sudo Rscript ~/Sensor/daily_plot1.R all',shell=True)
+			daily_plot()
 			# RPlotLog = open("/home/pi/Sensor/RPlotLog.csv", "a")
 			# RPlotLog.write(timestamp + "\n")
 			# RPlotLog.close()
