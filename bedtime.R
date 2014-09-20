@@ -98,10 +98,19 @@ plot(
 # Might be better to edit algorithm so the latest value in each day over a 
 # certain threshold is used
 
+# bedtime
 points(
   a[which(bla < -4.5), 
     c("timestamp","light")]
 )
+
+# home from work
+
+points(
+  a[which(bla > 1.5), 
+    c("timestamp","light")]
+)
+
 
 lines(
   rep(
