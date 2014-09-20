@@ -8,6 +8,15 @@ from subprocess import check_output
 from checkGmail import check
 from re import search
 import smtplib, string, os
+
+# load libraries required for plotting...could be optimised!
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import datetime as dt
+import scipy as sci
+from math import log
 import plot
 
 #	(ORANGE) 3.3v	[][]	5v (RED)

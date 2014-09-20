@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import datetime as dt
-import scipy as sci
-import math
+#import pandas as pd
+#import numpy as np
+#import matplotlib.pyplot as plt
+#import datetime as dt
+#import scipy as sci
+#from math import log
 
 # Load the data as a dataframe
 
@@ -38,7 +38,7 @@ def daily_plot():
 
 	# log the light sensor values to make them more understandable
 
-	light['light'] = light['light'].astype('float64').apply(math.log)
+	light['light'] = light['light'].astype('float64').apply(log)
 
 	# produce plot
 
@@ -55,6 +55,5 @@ def daily_plot():
 	plt.gca().invert_yaxis()
 	plt.plot(light['ts'],light['light'])
 
-	plt.savefig("/var/www/gfx/daily_temp_plot.png")
-
-
+	#plt.savefig("/var/www/gfx/daily_temp_plot.png")
+	plt.savefig("test.png")
