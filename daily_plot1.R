@@ -23,30 +23,8 @@ a <- read.csv(
   sep = ","
 )
 
-test_that(
-  "Log file is properly formatted.",
-{
-  expect_that(as.character(a[,1]),matches("^\\d+\\-\\d+\\-\\d+$"))
-  expect_that(as.character(a[,2]),matches("^\\d+\\:\\d+\\:\\d+$"))
-  expect_that(as.character(a[which(!is.na(a[,3])),3]),matches("\\d+\\.?\\d*"))
-  expect_that(as.character(a[,4]),matches("\\d+\\.?\\d+?"))
-  expect_that(as.character(a[,5]),matches("^\\d+"))
-  expect_that(as.character(a[,6]),matches("^\\d+\\.?\\d+"))
-  expect_that(as.character(a[,7]),matches("^\\d"))
-}
-)
-
-CurTime <- Sys.time()
-CurDate <- Sys.Date()
-
-a[,1:2] <- cbind(
-  as.character(a[,1]), 
-  as.character(a[,2])
-)
-
 colnames(a) <- c(
-  "date",
-  "time",
+  "timestamp",
   "temp1",
   "temp2",
   "light1",
@@ -54,20 +32,41 @@ colnames(a) <- c(
   "PIR"
 )
 
+test_that(
+  "Log file is properly formatted.",
+{
+  expect_that(as.character(a[,'timestamp']),matches("^\\d+\\-\\d+\\-\\d+\\w\\d+\\:\\d+\\:\\d+$"))
+  expect_that(as.character(a[which(!is.na(a[,'temp1'])),3]),matches("\\d+\\.?\\d*"))
+  expect_that(as.character(a[,'temp2']),matches("\\d+\\.?\\d+?"))
+  expect_that(as.character(a[,'light']),matches("^\\d+"))
+  expect_that(as.character(a[,'humidity']),matches("^\\d+\\.?\\d+"))
+  expect_that(as.character(a[,PIR]),matches("^\\d"))
+}
+)
+
+CurTime <- Sys.time()
+CurDate <- Sys.Date()
+
+#a[,1:2] <- cbind(
+#  as.character(a[,1]), 
+#  as.character(a[,2])
+#)
+
+
 # convert date and time to chron objects
 
-a$date <- dates(
-  as.character(a$date), 
-  format = "y-m-d"
-)
+#a$date <- dates(
+#  as.character(a$date), 
+#  format = "y-m-d"
+#)
 
-a$time <- times(
-  as.character(a$time), 
-  format = "h:m:s"
-)
+#a$time <- times(
+#  as.character(a$time), 
+#  format = "h:m:s"
+#)
 
 a$timestamp <- chron(
-  a$date, 
+  a$timestamp, 
   a$time
 )
 
