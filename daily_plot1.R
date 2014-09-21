@@ -27,7 +27,7 @@ colnames(a) <- c(
   "timestamp",
   "temp1",
   "temp2",
-  "light1",
+  "light",
   "humidity",
   "PIR"
 )
@@ -35,14 +35,16 @@ colnames(a) <- c(
 test_that(
   "Log file is properly formatted.",
 {
-  expect_that(as.character(a[,'timestamp']),matches("^\\d+\\-\\d+\\-\\d+\\w\\d+\\:\\d+\\:\\d+$"))
+  expect_that(as.character(a[,'timestamp']),matches("\\d+\\-\\d+\\-\\d+\\ \\d+\\:\\d+\\:\\d+"))
   expect_that(as.character(a[which(!is.na(a[,'temp1'])),3]),matches("\\d+\\.?\\d*"))
   expect_that(as.character(a[,'temp2']),matches("\\d+\\.?\\d+?"))
   expect_that(as.character(a[,'light']),matches("^\\d+"))
   expect_that(as.character(a[,'humidity']),matches("^\\d+\\.?\\d+"))
-  expect_that(as.character(a[,PIR]),matches("^\\d"))
+  expect_that(as.character(a[,'PIR']),matches("^\\d"))
 }
 )
+
+
 
 CurTime <- Sys.time()
 CurDate <- Sys.Date()
@@ -60,15 +62,12 @@ CurDate <- Sys.Date()
 #  format = "y-m-d"
 #)
 
-#a$time <- times(
+#a$time <- times(r(
 #  as.character(a$time), 
 #  format = "h:m:s"
 #)
 
-a$timestamp <- chron(
-  a$timestamp, 
-  a$time
-)
+a$timestamp <- strptime(as.character(a$timestamp),format = "%Y-%m-%d %H:%M:%S")
 
 
 # Check argument and produce graphs accordingly:
@@ -104,7 +103,7 @@ if (args[1] == "all") {
   
   a <- subset(
     a,
-    date > as.chron(args[1])
+    date > strptime(args[1],format="%Y-%m-%d")
   )
   
 
@@ -144,11 +143,11 @@ temp1 <- subset(a,temp1 > 0 & temp1 < 100,c(timestamp,temp1,PIR))
 temp2 <- subset(a,temp2 > 0 & temp2 < 100,c(timestamp,temp2,PIR))
 #coreTemp <- subset(a,coreTemp > 0 & coreTemp < 100,c(timestamp,coreTemp))
 humidity <- subset(a,humidity > 0 & humidity < 100,c(timestamp,humidity,PIR))
-light1 <- subset(a,light1 > 0 ,c(timestamp,light1,PIR)) # this has been changed!
-light1$light <- log(light1$light1) * -1
+light <- subset(a,light > 0 ,c(timestamp,light,PIR)) # this has been changed!
+light$light <- log(light$light) * -1
 
 temp1PIR <- subset(temp1,PIR > 0, c(timestamp,temp1))
-light1PIR <- subset(light1,PIR > 0, c(timestamp,light))
+lightPIR <- subset(light,PIR > 0, c(timestamp,light))
 humidityPIR <- subset(humidity,PIR > 0, c(timestamp,humidity))
 
 # Set graph axes max and min
@@ -275,8 +274,8 @@ par(
 )
 
 plot(
-  light1$timestamp,
-  light1$light,
+  light$timestamp,
+  light$light,
   xlab = "Date/Time",
   ylab = "Relative light values",
   pch = 16,
@@ -288,11 +287,11 @@ plot(
 
 
 sapply(
-  1:length(light1PIR[,1]), 
+  1:length(lightPIR[,1]), 
   function(x) {
     lines(
-      c(light1PIR[x,1],light1PIR[x,1]),
-      c(-20,light1PIR[x,2]),
+      c(lightPIR[x,1],lightPIR[x,1]),
+      c(-20,lightPIR[x,2]),
       col = "gray50",
       lwd = 0.5
     )
@@ -300,8 +299,8 @@ sapply(
 )
 
 points(
-  light1$timestamp,
-  light1$light,
+  light$timestamp,
+  light$light,
   col = "red",
   type = "l"
 )
