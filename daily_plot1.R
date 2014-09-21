@@ -3,19 +3,8 @@ args <- commandArgs(trailingOnly = TRUE)
 
 # Load packages
 
-require(chron)
-#require(zoo) # only required for rolling mean
 require(testthat)
 require(methods)
-
-# require(ggplot2) # doesn't support chron objects at present
-
-#expect_is(
-#  args, 
-#  "character", 
-#  info = "Arguments are not a vector of character objects"
-#)
-
 
 a <- read.csv(
   "Log.csv", 
@@ -44,34 +33,12 @@ test_that(
 }
 )
 
-
-
 CurTime <- Sys.time()
 CurDate <- Sys.Date()
 
-#a[,1:2] <- cbind(
-#  as.character(a[,1]), 
-#  as.character(a[,2])
-#)
-
-
-# convert date and time to chron objects
-
-#a$date <- dates(
-#  as.character(a$date), 
-#  format = "y-m-d"
-#)
-
-#a$time <- times(r(
-#  as.character(a$time), 
-#  format = "h:m:s"
-#)
-
 a$timestamp <- strptime(as.character(a$timestamp),format = "%Y-%m-%d %H:%M:%S")
 
-
 # Check argument and produce graphs accordingly:
-
 
 if (args[1] == "all") {
   
@@ -146,9 +113,9 @@ humidity <- subset(a,humidity > 0 & humidity < 100,c(timestamp,humidity,PIR))
 light <- subset(a,light > 0 ,c(timestamp,light,PIR)) # this has been changed!
 light$light <- log(light$light) * -1
 
-temp1PIR <- subset(temp1,PIR > 0, c(timestamp,temp1))
-lightPIR <- subset(light,PIR > 0, c(timestamp,light))
-humidityPIR <- subset(humidity,PIR > 0, c(timestamp,humidity))
+#temp1PIR <- subset(temp1,PIR > 0, c(timestamp,temp1))
+#lightPIR <- subset(light,PIR > 0, c(timestamp,light))
+#humidityPIR <- subset(humidity,PIR > 0, c(timestamp,humidity))
 
 # Set graph axes max and min
 
@@ -197,17 +164,17 @@ plotTemp <- plot(
 #par(xpd = FALSE)
 
 
-sapply(
-  1:length(temp1PIR[,1]),
-  function(x) {
-    lines(
-      c(temp1PIR[x,1],temp1PIR[x,1]),
-      c(0,temp1PIR[x,2]),
-      col = "gray50",
-      lwd = 0.5
-    ) 
-  }
-)
+# sapply(
+#   1:length(temp1PIR[,1]),
+#   function(x) {
+#     lines(
+#       c(temp1PIR[x,1],temp1PIR[x,1]),
+#       c(0,temp1PIR[x,2]),
+#       col = "gray50",
+#       lwd = 0.5
+#     ) 
+#   }
+# )
 
 points(
   temp1$timestamp,
@@ -245,17 +212,17 @@ plot(
 
 
 
-sapply(
-  1:length(humidityPIR[,1]), 
-  function(x) {
-    lines(
-      c(humidityPIR[x,1],humidityPIR[x,1]),
-      c(0,humidityPIR[x,2]),
-      col = "gray50",
-      lwd = 0.5
-    )
-  }
-)
+# sapply(
+#   1:length(humidityPIR[,1]), 
+#   function(x) {
+#     lines(
+#       c(humidityPIR[x,1],humidityPIR[x,1]),
+#       c(0,humidityPIR[x,2]),
+#       col = "gray50",
+#       lwd = 0.5
+#     )
+#   }
+# )
 
 points(
   humidity$timestamp,
@@ -286,17 +253,17 @@ plot(
 
 
 
-sapply(
-  1:length(lightPIR[,1]), 
-  function(x) {
-    lines(
-      c(lightPIR[x,1],lightPIR[x,1]),
-      c(-20,lightPIR[x,2]),
-      col = "gray50",
-      lwd = 0.5
-    )
-  }
-)
+# sapply(
+#   1:length(lightPIR[,1]), 
+#   function(x) {
+#     lines(
+#       c(lightPIR[x,1],lightPIR[x,1]),
+#       c(-20,lightPIR[x,2]),
+#       col = "gray50",
+#       lwd = 0.5
+#     )
+#   }
+# )
 
 points(
   light$timestamp,
