@@ -13,3 +13,5 @@ client = dropbox.client.DropboxClient(access_token)
 def uploadLog(lpath,spath):
 	f = open(lpath,'rb')
 	response = client.put_file(spath, f, overwrite=True)
+
+uploadLog("/var/www/Log.db","Log.db")
