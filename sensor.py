@@ -5,9 +5,11 @@ from time import sleep
 from time import strftime
 from subprocess import call
 from subprocess import check_output
-from checkGmail import check
-from re import search
-import smtplib, string, os
+#from checkGmail import check
+#from re import search
+import string, os
+import Adafruit_DHT
+#import smtplib, string, os
 
 #	(ORANGE) 3.3v	[][]	5v (RED)
 #	I2C0 SDA	[][]	DO NOT CONNECT
@@ -43,6 +45,17 @@ GPIO.setup(pin2, GPIO.OUT)
 GPIO.setup(pin4, GPIO.OUT)
 # GPIO.setup(pin5, GPIO.IN)
 
+def readSensor(w1):
+#	global temperature
+	tfile = open("/sys/bus/w1/devices/" + w1 + "/w1_slave","r") # Open te$
+        text = tfile.read() # Read all of the text in the file.
+        tfile.close() # Close the file now that the text has been read.
+        secondline = text.split("\n")[1] # Split the text with new lines (\n) and $
+        temperaturedata = secondline.split(" ")[9] # Split the line into words, re$
+        temp = float(temperaturedata[2:]) # The first two characters are "t$
+        temperature = temp / 1000 # Put the decimal point in the right plac$
+	return temperature	
+
 while True:
 
 # set initial pin states
@@ -62,44 +75,24 @@ while True:
 # Get reading from temperature sensor
 
 	temperature = "NA"
+	temperature1 = "NA"
 
 	try:
-		tfile = open("/sys/bus/w1/devices/28-00000457fd20/w1_slave","r") # Open temperature sensor file
-		text = tfile.read() # Read all of the text in the file.
-		tfile.close() # Close the file now that the text has been read.
-		secondline = text.split("\n")[1] # Split the text with new lines (\n) and select the second line.
-		temperaturedata = secondline.split(" ")[9] # Split the line into words, referring to the spaces, and select the 10th word $
-		temperature = float(temperaturedata[2:]) # The first two characters are "t=", so get rid of those and convert the temper$
-		temperature = temperature / 1000 # Put the decimal point in the right place and display it.
+		temperature = readSensor('28-000004021a46')
 	except:
 		pass
 	
-# read Pi core temp
+	try:
+		temperature1 = readSensor('28-000004024b05')
+	except:
+		pass
+	
+# Get data from DHT22 humidity and temp sensor
 
-#	coreTempLog = open("/sys/class/thermal/thermal_zone0/temp","r")
-#	text = coreTempLog.read()
-#	coreTempLog.close()
-#	coreTemp = float(text)/1000
+	humidity = "NA"
+	temperature2 = "NA"	
 
-# Get data from AM2302 humidity and temp sensor
-
-	while (True):
-		output = check_output(["./Adafruit_DHT", "2302", "22"]);	# PURPLE
-		matches = search("Temp =\s+([0-9.]+)", output)
-		if (not matches):
-			sleep(3)
-			continue
-		temperature1 = float(matches.group(1))
-		break
-
-	while (True):
-		output = check_output(["./Adafruit_DHT", "2302", "22"]);
-		matches = search("Hum =\s+([0-9.]+)", output)
-		if (not matches):
-			sleep(3)
-			continue
-		humidity = float(matches.group(1))
-		break
+	humidity, temperature2 = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 23)
 	
 	# Get reading from photoreceptor
 
@@ -112,23 +105,23 @@ while True:
 
 	# Read PIR value
 
-	PIR = open("PIRState", "r")
-	present = PIR.read()
-	PIR.close()
+#	PIR = open("PIRState", "r")
+#	present = PIR.read()
+#	PIR.close()
 
 	timestamp = strftime("%Y-%m-%d,%H:%M:%S")
 	
 	# log data in text file
 	
 	log = open("Log.csv", "a")
-	log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
+	log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," + str(temperature2) + "," + str(light) + "," + str(humidity))
 	log.close()
 
 	# Reset PIRState
 
-	PIRState = open("/home/pi/Sensor/PIRState", "w")
-	PIRState.write("0")
-	PIRState.close()
+#	PIRState = open("/home/pi/Sensor/PIRState", "w")
+#	PIRState.write("0")
+#	PIRState.close()
 
 	# Check for log frequency
 
@@ -148,7 +141,7 @@ while True:
 		#if (not matches) or (counterInt == 20):
 		if (counterInt == 10):
 			counter.write("0")
-			call('sudo R CMD BATCH daily_plot.R',shell=True)
+			call('sudo Rscript daily_plot1.R',shell=True)
 			# RPlotLog = open("/home/pi/Sensor/RPlotLog.csv", "a")
 			# RPlotLog.write(timestamp + "\n")
 			# RPlotLog.close()
