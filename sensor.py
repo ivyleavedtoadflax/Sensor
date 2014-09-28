@@ -115,7 +115,7 @@ timestamp = strftime("%Y-%m-%d %H:%M:%S")
 	
 # log data in text file
 	
-log = open("Log.csv", "a")
+log = open("/home/pi/Sensor/Log.csv", "a")
 log.write("\n" + str(timestamp) + "," + str(temperature) + "," + str(temperature1) + "," + str(temperature2) + "," + str(light) + "," + str(humidity))
 log.close()
 
