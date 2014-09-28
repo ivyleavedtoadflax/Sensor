@@ -94,9 +94,12 @@ while True:
 
 	humidity, temperature2 = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 23)
 	
+	humidity = ("%.2f" % humidity)
+	temperature2 = ("%.3f" % temperature2)
+
 	# Get reading from photoreceptor
 
-	light = "NA"
+	light = 0
 	
 	GPIO.setup(pin4, GPIO.IN)		 # This takes about 1 millisecond per loop cycle
 	while (GPIO.input(pin4) == GPIO.LOW):
@@ -114,7 +117,7 @@ while True:
 	# log data in text file
 	
 	log = open("Log.csv", "a")
-	log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," + str("%.3f" % temperature2) + "," + str(light) + "," + str("%.2f" % humidity))
+	log.write("\n" + str(timestamp) + "," + str(temperature) + "," + str(temperature1) + "," + str(temperature2) + "," + str(light) + "," + str(humidity))
 	log.close()
 
 	# Reset PIRState
