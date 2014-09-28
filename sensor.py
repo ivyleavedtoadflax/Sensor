@@ -5,6 +5,8 @@ from time import sleep
 from time import strftime
 import string, os
 import Adafruit_DHT
+import sqlite3
+
 #import smtplib, string, os
 
 #	(ORANGE) 3.3v	[][]	5v (RED)
@@ -21,7 +23,33 @@ import Adafruit_DHT
 #	SPI SCLK	[][]	SP10 CEO N
 #	DO NOT CONNECT	[][]	SP10 CE1 N
 
+######################### Setup GPIO PINS #########################
 
+# Use Broadcom chip reference for GPIO
+GPIO.setmode(GPIO.BCM)
+
+# Suppress "channel already in use" warning
+GPIO.setwarnings(False)
+
+# name pins
+
+pin1 = 4        # Temperature sensor
+pin2 = 17       # LED
+pin4 = 18       # Photoresistor 
+
+# pin 23 = DHT          
+
+# Setup outputs
+GPIO.setup(pin1, GPIO.OUT)
+GPIO.setup(pin2, GPIO.OUT)
+GPIO.setup(pin4, GPIO.OUT)
+# GPIO.setup(pin5, GPIO.IN)
+
+# set initial pin states
+GPIO.output(pin2, GPIO.LOW)
+GPIO.output(pin4, GPIO.LOW)
+
+######################################################################
 
 def readSensor(w1):
 #	global temperature
@@ -83,7 +111,7 @@ GPIO.setup(pin4, GPIO.OUT)
 if (light == 0):
 	light = str("NA")
 
-timestamp = strftime("%Y-%m-%d,%H:%M:%S")
+timestamp = strftime("%Y-%m-%d %H:%M:%S")
 	
 # log data in text file
 	
@@ -91,43 +119,13 @@ log = open("Log.csv", "a")
 log.write("\n" + str(timestamp) + "," + str(temperature) + "," + str(temperature1) + "," + str(temperature2) + "," + str(light) + "," + str(humidity))
 log.close()
 
-# Reset PIRState
+# Log into /www/var/Log.db - sqlite3 database
 
-#	PIRState = open("/home/pi/Sensor/PIRState", "w")
-#	PIRState.write("0")
-#	PIRState.close()
+conn=sqlite3.connect("/var/www/SensorPiB.db")
+curs=conn.cursor()
 
-	# Check for log frequency
+curs.execute("INSERT INTO SensorPiB values('" + str(timestamp) + "','" + str(temperature) + "','" + str(temperature1) + "','" + str(temperature2) + "','" + str(light) + "','" +  str(humidity) + "')")
 
-#freq = open("logFreq","r")
-#logFreq = int(freq.read()) # check file for log frequency (in seconds)
-#freq.close()
-	
-		# Run R command to create plots
-	
-#try :
-#	counter = open("counter","r")
-#	counterInt = int(counter.read())
-#	counter.close()
-#	#matches = search("0-20", counterInt)
-#	counter = open("counter","w")
-#		
-#		#if (not matches) or (counterInt == 20):
-#	if (counterInt == 10):
-#		counter.write("0")
-#		call('sudo Rscript daily_plot1.R',shell=True)
-#		# RPlotLog = open("/home/pi/Sensor/RPlotLog.csv", "a")
-#		# RPlotLog.write(timestamp + "\n")
-#		# RPlotLog.close()
-#
-#	if (counterInt < 10):
-#		counter.write(str(counterInt+1))
-#	
-#	counter.close()
-#		
-#except:
-#	pass
-	
-
-#	sleep(logFreq) # cancel this if running by crontab	
+conn.commit()
+conn.close()
 
