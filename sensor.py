@@ -108,14 +108,11 @@ while (GPIO.input(pin4) == GPIO.LOW):
 	light += 1
 GPIO.setup(pin4, GPIO.OUT)
 
-if (light == 0):
-	light = str("NA")
-
 timestamp = strftime("%Y-%m-%d %H:%M:%S")
 	
 # log data in text file
 	
-log = open("Log.csv", "a")
+log = open("/home/pi/Sensor/Log.csv", "a")
 log.write("\n" + str(timestamp) + "," + str(temperature) + "," + str(temperature1) + "," + str(temperature2) + "," + str(light) + "," + str(humidity))
 log.close()
 
