@@ -1,6 +1,6 @@
 import dropbox
 
-access_token_file = open("access_token","r")
+access_token_file = open("/home/pi/Sensor/access_token","r")
 access_token = access_token_file.read()
 access_token_file.close()
 

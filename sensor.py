@@ -7,7 +7,7 @@ from subprocess import call
 from subprocess import check_output
 #from checkGmail import check
 from re import search
-import string, os, sqlite3, db
+import string, os, sqlite3
 
 #	(ORANGE) 3.3v	[][]	5v (RED)
 #	I2C0 SDA	[][]	DO NOT CONNECT
@@ -81,23 +81,26 @@ except:
 
 # Get data from AM2302 humidity and temp sensor
 
-while (True):
-	output = check_output(["./Adafruit_DHT", "2302", "22"]);	# PURPLE
-	matches = search("Temp =\s+([0-9.]+)", output)
-	if (not matches):
-		sleep(3)
-		continue
-	temperature1 = float(matches.group(1))
-	break
+try:
+	while (True):
+		output = check_output(["/home/pi/Sensor/Adafruit_DHT", "2302", "22"]);	# PURPLE
+		matches = search("Temp =\s+([0-9.]+)", output)
+		if (not matches):
+			sleep(3)
+			continue
+		temperature1 = float(matches.group(1))
+		break
 
-while (True):
-	output = check_output(["./Adafruit_DHT", "2302", "22"]);
-	matches = search("Hum =\s+([0-9.]+)", output)
-	if (not matches):
-		sleep(3)
-		continue
-	humidity = float(matches.group(1))
-	break
+	while (True):
+		output = check_output(["/home/pi/Sensor/Adafruit_DHT", "2302", "22"]);
+		matches = search("Hum =\s+([0-9.]+)", output)
+		if (not matches):
+			sleep(3)
+			continue
+		humidity = float(matches.group(1))
+		break
+except:
+	pass
 	
 # Get reading from photoreceptor
 
@@ -109,16 +112,18 @@ while (GPIO.input(pin4) == GPIO.LOW):
 GPIO.setup(pin4, GPIO.OUT)
 
 # Read PIR value
+# Not working at present
 
-PIR = open("PIRState", "r")
-present = PIR.read()
-PIR.close()
+present = 0
+#PIR = open("PIRState", "r")
+#present = PIR.read()
+#PIR.close()
 
 timestamp = strftime("%Y-%m-%d %H:%M:%S")
 	
 	# log data in text file
 	
-log = open("Log.csv", "a")
+log = open("/home/pi/Sensor/Log.csv", "a")
 log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
 log.close()
 
@@ -131,9 +136,3 @@ curs.execute("INSERT INTO temp values('" + str(timestamp) + "','" + str(temperat
 
 conn.commit()
 conn.close()
-
-# Reset PIRState
-
-PIRState = open("/home/pi/Sensor/PIRState", "w")
-PIRState.write("0")
-PIRState.close()
