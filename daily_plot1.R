@@ -28,7 +28,7 @@ test_that(
   expect_that(as.character(a[which(!is.na(a[,'temp1'])),3]),matches("\\d+\\.?\\d*"))
   expect_that(as.character(a[which(!is.na(a[,'temp2'])),3]),matches("\\d+\\.?\\d*"))
   expect_that(as.character(a[which(!is.na(a[,'temp3'])),3]),matches("\\d+\\.?\\d*"))
-  expect_that(as.character(a[,'light']),matches("^\\d+"))
+  expect_that(as.character(na.omit(a[,'light'])),matches("^\\d+"))
   expect_that(as.character(a[,'humidity']),matches("^\\d+\\.?\\d+"))
 }
 )

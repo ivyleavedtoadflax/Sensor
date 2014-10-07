@@ -46,7 +46,7 @@ GPIO.setup(pin4, GPIO.OUT)
 # GPIO.setup(pin5, GPIO.IN)
 
 # set initial pin states
-GPIO.output(pin2, GPIO.LOW)
+GPIO.output(pin2, GPIO.HIGH)
 GPIO.output(pin4, GPIO.LOW)
 
 ######################################################################
@@ -66,9 +66,9 @@ def readSensor(w1):
 	
 ledCount = 0
 while ledCount <3:
-	GPIO.output(pin2, GPIO.HIGH)
-	sleep(0.2)
 	GPIO.output(pin2, GPIO.LOW)
+	sleep(0.2)
+	GPIO.output(pin2, GPIO.HIGH)
 	sleep(0.2)
 	ledCount +=1
 
@@ -108,7 +108,8 @@ while (GPIO.input(pin4) == GPIO.LOW):
 	light += 1
 GPIO.setup(pin4, GPIO.OUT)
 
-timestamp = strftime("%Y-%m-%d %H:%M:%S")
+timestamp = strftime("%Y-%m-%d %H:%M:00")
+#timestamp = strftime("%Y-%m-%d %H:%M:%S")
 	
 # log data in text file
 	
