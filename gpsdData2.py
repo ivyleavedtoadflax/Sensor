@@ -29,10 +29,13 @@ if __name__ == '__main__':
   try:
     gpsp.start() # start it up
 
-    while True:
+    i = 0
+
+    while (i < 100):
       lat = gpsd.fix.latitude
       lon = gpsd.fix.longitude
       utc = gpsd.utc
+      i += 1
       if (lat == 0.0):
         time.sleep(0.05)
       else:
