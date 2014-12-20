@@ -7,6 +7,7 @@ from gps import *
 from time import *
 import time
 import threading
+import sqlite3
 
 gpsd = None #seting the global variable
 
@@ -35,12 +36,17 @@ if __name__ == '__main__':
       if (lat == 0.0):
         time.sleep(0.05)
       else:
-        print lat
-        print lon
-        print utc
+	# Log into /www/var/Log.db - sqlite3 database
         break
-
     gpsp.running = False
-    gpsp.join() # wait for the thread to finish what it's doing
+    gpsp.join()
   except:
     pass
+
+conn = sqlite3.connect("/var/www/SensorPiB.db")
+curs = conn.cursor()
+
+curs.execute("INSERT INTO gps values('" + str(utc) + "','" + str(lat) + "','" + str(lon) + "')")
+
+conn.commit()
+conn.close()
