@@ -46,10 +46,24 @@ if __name__ == '__main__':
   except:
     pass
 
-conn = sqlite3.connect("/var/www/SensorPiB.db")
-curs = conn.cursor()
+# define logging function
 
-curs.execute("INSERT INTO gps values('" + str(utc) + "','" + str(lat) + "','" + str(lon) + "')")
+def logGPStoSQL():
+	try:
+		conn = sqlite3.connect("/var/www/SensorPiB.db")
+		curs = conn.cursor()
+		curs.execute("INSERT INTO gps values('" + str(utc) + "','" + str(lat) + "','" + str(lon) + "')")
+		conn.commit()
+		conn.close()
+	except:
+		pass
 
-conn.commit()
-conn.close()
+# check for test mode and print to screen if enable
+
+if (sys.argv[1] == "test"):
+        print "timestamp: ", str(utc)
+        print "latitude:  ", str(lat)
+        print "longitdue: ", str(lon)
+else:
+        logGPStoSQL()
+
