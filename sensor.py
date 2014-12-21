@@ -3,12 +3,12 @@
 import RPi.GPIO as GPIO
 from time import sleep
 from time import strftime
-from subprocess import call
-from subprocess import check_output
-#from checkGmail import check
-from re import search
-import string, os, sqlite3
+import string, os, sys
 import Adafruit_DHT
+import sqlite3
+
+
+#import smtplib, string, os
 
 #	(ORANGE) 3.3v	[][]	5v (RED)
 #	I2C0 SDA	[][]	DO NOT CONNECT
@@ -24,6 +24,7 @@ import Adafruit_DHT
 #	SPI SCLK	[][]	SP10 CEO N
 #	DO NOT CONNECT	[][]	SP10 CE1 N
 
+######################### Setup GPIO PINS #########################
 
 # Use Broadcom chip reference for GPIO
 GPIO.setmode(GPIO.BCM)
@@ -33,10 +34,11 @@ GPIO.setwarnings(False)
 
 # name pins
 
-pin1 = 4 	# Temperature sensor	# GREEN
-pin2 = 17	# LED 1					# YELLOW
-pin4 = 18	# Photoresistor			# ORANGE
-# pin5 = 21	# PIR					
+pin1 = 4        # Temperature sensor
+pin2 = 17       # LED
+pin4 = 18       # Photoresistor 
+
+# pin 23 = DHT          
 
 # Setup outputs
 GPIO.setup(pin1, GPIO.OUT)
@@ -45,86 +47,119 @@ GPIO.setup(pin4, GPIO.OUT)
 # GPIO.setup(pin5, GPIO.IN)
 
 # set initial pin states
-GPIO.output(pin2, GPIO.LOW)
-GPIO.output(pin4, GPIO.LOW) 
-	
-# Run data recording LED init sequence
-	
-ledCount = 0
-while ledCount <3:
-	GPIO.output(pin2, GPIO.HIGH)
-	sleep(0.2)
-	GPIO.output(pin2, GPIO.LOW)
-	sleep(0.2)
-	ledCount +=1
+GPIO.output(pin2, GPIO.HIGH)
+GPIO.output(pin4, GPIO.LOW)
 
-# Get reading from temperature sensor
+# Set all variables to NA
 
+timestamp = "NA"
 temperature = "NA"
-
-try:
-	tfile = open("/sys/bus/w1/devices/28-00000457fd20/w1_slave","r") # Open temperature sensor file
-	text = tfile.read() # Read all of the text in the file.
-	tfile.close() # Close the file now that the text has been read.
-	secondline = text.split("\n")[1] # Split the text with new lines (\n) and select the second line.
-	temperaturedata = secondline.split(" ")[9] # Split the line into words, referring to the spaces, and select the 10th word $
-	temperature = float(temperaturedata[2:]) # The first two characters are "t=", so get rid of those and convert the temper$
-	temperature = temperature / 1000 # Put the decimal point in the right place and display it.
-except:
-	pass
-	
-# read Pi core temp
-
-#	coreTempLog = open("/sys/class/thermal/thermal_zone0/temp","r")
-#	text = coreTempLog.read()
-#	coreTempLog.close()
-#	coreTemp = float(text)/1000
-
-# Get data from AM2302 humidity and temp sensor
-# Get data from DHT22 humidity and temp sensor
-
-humidity = "NA"
+#temperature1 = "NA"
 temperature2 = "NA"
-
-try:
-        humidity, temperature2 = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 22)
-        humidity = ("%.2f" % humidity)
-        temperature2 = ("%.3f" % temperature2)
-except:
-        pass
-
-# Get reading from photoreceptor
-
-light = 0
-
-GPIO.setup(pin4, GPIO.IN)		 # This takes about 1 millisecond per loop cycle
-while (GPIO.input(pin4) == GPIO.LOW):
-	light += 1
-GPIO.setup(pin4, GPIO.OUT)
-
-# Read PIR value
-# Not working at present
-
+light = 0 # must be numeric
+humidity = "NA"
 present = 0
-#PIR = open("PIRState", "r")
-#present = PIR.read()
-#PIR.close()
 
-#timestamp = strftime("%Y-%m-%d %H:%M")
-timestamp = strftime("%Y-%m-%d %H:%M:00")
-	
-	# log data in text file
-	
-log = open("/home/pi/Sensor/Log.csv", "a")
-log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
-log.close()
+# Define functions
+
+def readTemp(w1):
+	try:
+		tfile = open("/sys/bus/w1/devices/" + w1 + "/w1_slave","r") # Open te$
+        	text = tfile.read() # Read all of the text in the file.
+        	tfile.close() # Close the file now that the text has been read.
+        	secondline = text.split("\n")[1] # Split the text with new lines (\n) and $
+        	temperaturedata = secondline.split(" ")[9] # Split the line into words, re$
+        	temp = float(temperaturedata[2:]) # The first two characters are "t$
+        	temperature = temp / 1000 # Put the decimal point in the right plac$
+		return temperature
+	except:
+		pass
+
+# Run data recording LED init sequence
+
+def ledFlash(i):	
+	ledCount = 0
+	while ledCount < i:
+		GPIO.output(pin2, GPIO.LOW)
+		sleep(0.2)
+		GPIO.output(pin2, GPIO.HIGH)
+		sleep(0.2)
+		ledCount +=1
+
+# log data in text file
+
+def write_log_csv(ts,temp,temp2,ldr,hum,pir):
+        log = open("/home/pi/Sensor/Log.csv", "a")
+	log.write("\n" + str(ts) + "," + str(temp) + "," + str(temp2) + "," + str(ldr) + "," + str(hum) + "," + str(pir))
+	log.close()
 
 # Log into /www/var/Log.db - sqlite3 database
 
-conn=sqlite3.connect("/var/www/Log.db")
-curs=conn.cursor()
+def write_log_sql(database,ts,temp,temp2,ldr,hum,pir):
+        conn = sqlite3.connect(db)
+        curs = conn.cursor()
+	curs.execute("INSERT INTO temp values('" + str(ts) + "','" + str(temp) + "','" + str(temp2) + "','" + str(ldr) + "','" +  str(hum) + "','" + str(pir) +  "')")
+        conn.commit()
+        conn.close()
 
-curs.execute("INSERT INTO temp values('" + str(timestamp) + "','" + str(temperature) + "','" + str(temperature2) + "','" + str(light) + "','" +  str(humidity) + "','" +  str(present) + "')")
+# Get reading from photoreceptor
 
-conn.commit()
-conn.close()
+
+def getLight():
+	lightCount = 0
+	GPIO.setup(pin4, GPIO.IN)		 # This takes about 1 millisecond per loop cycle
+	while (GPIO.input(pin4) == GPIO.LOW):
+		lightCount += 1
+	GPIO.setup(pin4, GPIO.OUT)
+	return(lightCount)
+
+# Main function
+
+db = "/var/www/Log.db"
+
+def main():
+
+	timestamp = strftime("%Y-%m-%d %H:%M:00")
+	temperature = readTemp('28-00000457fd20')
+	light = getLight()
+        
+	# Get data from DHT sensor with Adafruit code
+	try:
+                humidity, temperature2 = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 22)
+                humidity = ("%.2f" % humidity)
+                temperature2 = ("%.3f" % temperature2)
+        except:
+                pass
+
+	if (len(sys.argv) == 0):
+		print "Must take a single argument: test, sql, csl or all."
+
+	elif (sys.argv[1] == "test"):
+
+		ledFlash(1)		
+
+		print "timestamp:    ", str(timestamp)
+		print "temperature:  ", str(temperature)
+		print "temperature2: ", str(temperature2)
+		print "light:        ", str(light)
+		print "humidity:     ", str(humidity)
+		print "present:      ", str(present)
+
+	elif (sys.argv[1] == "sql"):
+		ledFlash(3)
+		write_log_sql(db,timestamp,temperature,temperature2,light,humidity,present)
+
+	elif (sys.argv[1] == "csl"):
+                ledFlash(3)
+                write_log_csv(timestamp,temperature,temperature2,light,humidity,present)
+
+	elif (sys.argv[1] == "all"):
+                ledFlash(3)
+                write_log_csv(timestamp,temperature,temperature2,light,humidity,present)
+                write_log_sql(db,timestamp,temperature,temperature2,light,humidity,present)
+
+	else:
+		print "Must take a single argument: test, sql, csl, or all."
+
+if __name__ == '__main__':
+	main()
