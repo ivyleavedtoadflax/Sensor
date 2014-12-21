@@ -60,10 +60,18 @@ def logGPStoSQL():
 
 # check for test mode and print to screen if enable
 
-if (sys.argv[1] == "test"):
-        print "timestamp: ", str(utc)
-        print "latitude:  ", str(lat)
-        print "longitdue: ", str(lon)
-else:
-        logGPStoSQL()
+def main():
+	if (len(sys.argv) == 0):
+		print "Must take a single argument: test or log."
+	elif (sys.argv[1] == "log"):
+        	logGPStoSQL()
+	elif (sys.argv[1] == "test"):
+        	print "timestamp: ", str(utc)
+	        print "latitude:  ", str(lat)
+        	print "longitdue: ", str(lon)
+	else:
+        	print "Must take a single argument: test or log."
+
+if __name__ == '__main__':
+	main()
 
