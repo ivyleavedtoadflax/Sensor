@@ -8,6 +8,7 @@ from subprocess import check_output
 #from checkGmail import check
 from re import search
 import string, os, sqlite3
+import Adafruit_DHT
 
 #	(ORANGE) 3.3v	[][]	5v (RED)
 #	I2C0 SDA	[][]	DO NOT CONNECT
@@ -80,27 +81,39 @@ except:
 #	coreTemp = float(text)/1000
 
 # Get data from AM2302 humidity and temp sensor
+# Get data from DHT22 humidity and temp sensor
+
+humidity = "NA"
+temperature2 = "NA"
 
 try:
-	while (True):
-		output = check_output(["/home/pi/Sensor/Adafruit_DHT", "2302", "22"]);	# PURPLE
-		matches = search("Temp =\s+([0-9.]+)", output)
-		if (not matches):
-			sleep(3)
-			continue
-		temperature1 = float(matches.group(1))
-		break
-
-	while (True):
-		output = check_output(["/home/pi/Sensor/Adafruit_DHT", "2302", "22"]);
-		matches = search("Hum =\s+([0-9.]+)", output)
-		if (not matches):
-			sleep(3)
-			continue
-		humidity = float(matches.group(1))
-		break
+        humidity, temperature2 = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 22)
+        humidity = ("%.2f" % humidity)
+        temperature2 = ("%.3f" % temperature2)
 except:
-	pass
+        pass
+
+#try:
+#	while (True):
+#		output = check_output(["/home/pi/Sensor/Adafruit_DHT", "2302", "22"]);	# PURPLE
+#		matches = search("Temp =\s+([0-9.]+)", output)
+#		if (not matches):
+#			sleep(3)
+#			continue
+#		temperature1 = float(matches.group(1))
+#		break
+#
+#	while (True):
+#		output = check_output(["/home/pi/Sensor/Adafruit_DHT", "2302", "22"]);
+#		matches = search("Hum =\s+([0-9.]+)", output)
+#		if (not matches):
+#			sleep(3)
+#			continue
+#		humidity = float(matches.group(1))
+#		break
+#except:
+#	pass
+
 	
 # Get reading from photoreceptor
 
@@ -119,12 +132,13 @@ present = 0
 #present = PIR.read()
 #PIR.close()
 
-timestamp = strftime("%Y-%m-%d %H:%M:%S")
+#timestamp = strftime("%Y-%m-%d %H:%M")
+timestamp = strftime("%Y-%m-%d %H:%M:00")
 	
 	# log data in text file
-	
+
 log = open("/home/pi/Sensor/Log.csv", "a")
-log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
+log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature2) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
 log.close()
 
 # Log into /www/var/Log.db - sqlite3 database
@@ -132,7 +146,7 @@ log.close()
 conn=sqlite3.connect("/var/www/Log.db")
 curs=conn.cursor()
 
-curs.execute("INSERT INTO temp values('" + str(timestamp) + "','" + str(temperature) + "','" + str(temperature1) + "','" + str(light) + "','" +  str(humidity) + "','" +  str(present) + "')")
+curs.execute("INSERT INTO temp values('" + str(timestamp) + "','" + str(temperature) + "','" + str(temperature2) + "','" + str(light) + "','" +  str(humidity) + "','" +  str(present) + "')")
 
 conn.commit()
 conn.close()
