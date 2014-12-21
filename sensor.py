@@ -93,28 +93,6 @@ try:
 except:
         pass
 
-#try:
-#	while (True):
-#		output = check_output(["/home/pi/Sensor/Adafruit_DHT", "2302", "22"]);	# PURPLE
-#		matches = search("Temp =\s+([0-9.]+)", output)
-#		if (not matches):
-#			sleep(3)
-#			continue
-#		temperature1 = float(matches.group(1))
-#		break
-#
-#	while (True):
-#		output = check_output(["/home/pi/Sensor/Adafruit_DHT", "2302", "22"]);
-#		matches = search("Hum =\s+([0-9.]+)", output)
-#		if (not matches):
-#			sleep(3)
-#			continue
-#		humidity = float(matches.group(1))
-#		break
-#except:
-#	pass
-
-	
 # Get reading from photoreceptor
 
 light = 0
@@ -136,9 +114,9 @@ present = 0
 timestamp = strftime("%Y-%m-%d %H:%M:00")
 	
 	# log data in text file
-
+	
 log = open("/home/pi/Sensor/Log.csv", "a")
-log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature2) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
+log.write("\n" + timestamp + "," + str(temperature) + "," + str(temperature1) + "," +str(light) + "," + str(humidity) + "," + str(present)) 
 log.close()
 
 # Log into /www/var/Log.db - sqlite3 database
