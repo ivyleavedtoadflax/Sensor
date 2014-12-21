@@ -3,9 +3,10 @@
 import RPi.GPIO as GPIO
 from time import sleep
 from time import strftime
-import string, os
+import string, os, sys
 import Adafruit_DHT
 import sqlite3
+
 
 #import smtplib, string, os
 
@@ -49,7 +50,16 @@ GPIO.setup(pin4, GPIO.OUT)
 GPIO.output(pin2, GPIO.HIGH)
 GPIO.output(pin4, GPIO.LOW)
 
-######################################################################
+# Set all variables to NA
+
+timestamp = "NA"
+temperature = "NA"
+temperature1 = "NA"
+temperature2 = "NA"
+light = 0 # must be numeric
+humidity = "NA"
+
+# Define functions
 
 def readSensor(w1):
 #	global temperature
@@ -72,10 +82,22 @@ while ledCount <3:
 	sleep(0.2)
 	ledCount +=1
 
-# Get reading from temperature sensor
+# log data in text file
+def write_log_csv():
+        log = open("/home/pi/Sensor/Log.csv", "a")
+	log.write("\n" + str(timestamp) + "," + str(temperature) + "," + str(temperature1) + "," + str(temperature2) + "," + str(light) + "," + str(humidity))
+	log.close()
 
-temperature = "NA"
-temperature1 = "NA"
+# Log into /www/var/Log.db - sqlite3 database
+
+def write_log_sql():
+        conn = sqlite3.connect("/var/www/SensorPiB.db")
+        curs = conn.cursor()
+	curs.execute("INSERT INTO SensorPiB values('" + str(timestamp) + "','" + str(temperature) + "','" + str(temperature1) + "','" + str(temperature2) + "','" + str(light) + "','" +  str(humidity) + "')")
+        conn.commit()
+        conn.close()
+
+# Get reading from ds18b20 sensors
 
 try:
 	temperature = readSensor('28-000004021a46')
@@ -89,9 +111,6 @@ except:
 	
 # Get data from DHT22 humidity and temp sensor
 
-humidity = "NA"
-temperature2 = "NA"	
-
 try:
 	humidity, temperature2 = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 23)
 	humidity = ("%.2f" % humidity)
@@ -101,8 +120,6 @@ except:
 
 # Get reading from photoreceptor
 
-light = 0
-	
 GPIO.setup(pin4, GPIO.IN)		 # This takes about 1 millisecond per loop cycle
 while (GPIO.input(pin4) == GPIO.LOW):
 	light += 1
@@ -110,20 +127,14 @@ GPIO.setup(pin4, GPIO.OUT)
 
 timestamp = strftime("%Y-%m-%d %H:%M:00")
 #timestamp = strftime("%Y-%m-%d %H:%M:%S")
-	
-# log data in text file
-	
-log = open("/home/pi/Sensor/Log.csv", "a")
-log.write("\n" + str(timestamp) + "," + str(temperature) + "," + str(temperature1) + "," + str(temperature2) + "," + str(light) + "," + str(humidity))
-log.close()
 
-# Log into /www/var/Log.db - sqlite3 database
-
-conn=sqlite3.connect("/var/www/SensorPiB.db")
-curs=conn.cursor()
-
-curs.execute("INSERT INTO SensorPiB values('" + str(timestamp) + "','" + str(temperature) + "','" + str(temperature1) + "','" + str(temperature2) + "','" + str(light) + "','" +  str(humidity) + "')")
-
-conn.commit()
-conn.close()
-
+if (sys.argv[1] == "test"):
+	print "timestamp:    " , str(timestamp)
+	print "temperature:  ", str(temperature)
+	print "temperature1: ", str(temperature1)
+	print "temperature2: ", str(temperature2)
+	print "light:        ", str(light)
+	print "humidity      ", str(humidity)
+else:
+	write_log_csv()
+	write_log_sql()
