@@ -48,7 +48,7 @@ GPIO.setup(pin4, GPIO.OUT)
 
 # set initial pin states
 GPIO.output(pin2, GPIO.HIGH)
-GPIO.output(pin4, GPIO.LOW)
+GPIO.output(pin4, GPIO.HIGH)
 
 # Set all variables to NA
 
@@ -80,9 +80,9 @@ def readTemp(w1):
 def ledFlash(i):	
 	ledCount = 0
 	while ledCount < i:
-		GPIO.output(pin2, GPIO.LOW)
-		sleep(0.2)
 		GPIO.output(pin2, GPIO.HIGH)
+		sleep(0.2)
+		GPIO.output(pin2, GPIO.LOW)
 		sleep(0.2)
 		ledCount +=1
 
