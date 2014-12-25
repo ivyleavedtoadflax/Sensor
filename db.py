@@ -1,5 +1,8 @@
 import dropbox
 
+# For security the access token is included in a seprate file,
+# to avoid accidentally posting it to github!
+
 access_token_file = open("/home/pi/Sensor/access_token","r")
 access_token = access_token_file.read()
 access_token_file.close()
