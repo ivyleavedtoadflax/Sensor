@@ -47,8 +47,8 @@ GPIO.setup(pin4, GPIO.OUT)
 # GPIO.setup(pin5, GPIO.IN)
 
 # set initial pin states
-GPIO.output(pin2, GPIO.HIGH)
-GPIO.output(pin4, GPIO.HIGH)
+GPIO.output(pin2, GPIO.LOW)
+GPIO.output(pin4, GPIO.LOW)
 
 # Set all variables to NA
 
