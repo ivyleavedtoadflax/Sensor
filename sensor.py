@@ -5,7 +5,7 @@ from time import sleep
 from time import strftime
 from subprocess import call
 from subprocess import check_output
-from checkGmail import check
+#from checkGmail import check
 from re import search
 import smtplib, string, os
 
