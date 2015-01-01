@@ -22,14 +22,14 @@ After installing Raspbian we need to make sure that the raspberry pi A+ is going
 
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 
-network={
-	ssid="EE-BrightBox-57asdk"
-	psk=""
-	proto=RSN
-	key_mgmt=WPA-PSK
-	pairwise=CCMP
-	auth_alg=OPEN
-	}
+> network={
+> 	ssid="EE-BrightBox-57asdk"
+> 	psk=""
+> 	proto=RSN
+> 	key_mgmt=WPA-PSK
+> 	pairwise=CCMP
+> 	auth_alg=OPEN
+> 	}
 
 Once that is sorted, I plug in the WiFi adapter (and be careful if you are using an edimax one - these seem to bethicker than normal usb ports, and for some reason I have bent back the usb port pins twice -- on the first occasion I had to send the pi back for a replacement), switch on the pi and it should connect to your network.
 
