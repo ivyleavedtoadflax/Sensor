@@ -3,12 +3,8 @@
 import RPi.GPIO as GPIO
 from time import sleep
 from time import strftime
-import string, os, sys
-import Adafruit_DHT
-import sqlite3
-
-
-#import smtplib, string, os
+from socket import gethostname
+import string, os, sys, Adafruit_DHT, sqlite3, psycopg2, server_cred
 
 #	(ORANGE) 3.3v	[][]	5v (RED)
 #	I2C0 SDA	[][]	DO NOT CONNECT
@@ -38,6 +34,8 @@ pin1 = 4        # Temperature sensor
 pin2 = 17       # LED
 pin4 = 18       # Photoresistor 
 
+# Don't need to assign pin for DHT - this is dealt with in adafruit code
+
 # pin 23 = DHT          
 
 # Setup outputs
@@ -46,21 +44,25 @@ GPIO.setup(pin2, GPIO.OUT)
 GPIO.setup(pin4, GPIO.OUT)
 # GPIO.setup(pin5, GPIO.IN)
 
-# set initial pin states
-GPIO.output(pin2, GPIO.LOW)
+# Set initial pin states. Wired led on pin2 the wrong way so start high and go low!
+
+GPIO.output(pin2, GPIO.HIGH)
 GPIO.output(pin4, GPIO.LOW)
 
 # Set all variables to NA
 
 timestamp = "NA"
 temperature = "NA"
-#temperature1 = "NA"
+temperature1 = "NA"
 temperature2 = "NA"
 light = 0 # must be numeric
 humidity = "NA"
-present = 0
+rpi = gethostname()
+
 
 # Define functions
+
+# This code is adapted from here: https://www.cl.cam.ac.uk/projects/raspberrypi/tutorials/temperature/
 
 def readTemp(w1):
 	try:
@@ -80,30 +82,41 @@ def readTemp(w1):
 def ledFlash(i):	
 	ledCount = 0
 	while ledCount < i:
-		GPIO.output(pin2, GPIO.HIGH)
-		sleep(0.2)
 		GPIO.output(pin2, GPIO.LOW)
+		sleep(0.2)
+		GPIO.output(pin2, GPIO.HIGH)
 		sleep(0.2)
 		ledCount +=1
 
 # log data in text file
 
-def write_log_csv(ts,temp,temp2,ldr,hum,pir):
+def write_log_csv(ts,temp,temp1,temp2,ldr,hum):
         log = open("/home/pi/Sensor/Log.csv", "a")
-	log.write("\n" + str(ts) + "," + str(temp) + "," + str(temp2) + "," + str(ldr) + "," + str(hum) + "," + str(pir))
+	log.write("\n" + str(ts) + "," + str(temp) + "," + str(temp1) + "," + str(temp2) + "," + str(ldr) + "," + str(hum))
 	log.close()
 
 # Log into /www/var/Log.db - sqlite3 database
 
-def write_log_sql(database,ts,temp,temp2,ldr,hum,pir):
-        conn = sqlite3.connect(db)
+def write_log_sql(ts,temp,temp1,temp2,ldr,hum):
+        conn = sqlite3.connect("/var/www/Log.db")
         curs = conn.cursor()
-	curs.execute("INSERT INTO temp values('" + str(ts) + "','" + str(temp) + "','" + str(temp2) + "','" + str(ldr) + "','" +  str(hum) + "','" + str(pir) +  "')")
+	curs.execute("INSERT INTO SensorPiB values('" + str(ts) + "','" + str(temp) + "','" + str(temp1) + "','" + str(temp2) + "','" + str(ldr) + "','" +  str(hum) + "')")
         conn.commit()
         conn.close()
 
-# Get reading from photoreceptor
+def write_log_psql(rpi,ts,int_temp1,int_temp2,ext_temp1,ldr,hum):
 
+        # server_cred must be present and in correct format, see below:
+        conn_string = str("dbname = '"+ server_cred.db_name + "' user = '" + server_cred.username + "' host = '" + server_cred.host_ip + "' password = '" + server_cred.password + "'")
+        conn = psycopg2.connect(conn_string)
+        curs = conn.cursor()
+        query_string = str("INSERT INTO sensorpi values('" + str(rpi) + "','" + str(ts) + "','" + str(int_temp1) + "','" + str(int_temp2) + "','" + str(ext_temp1) + "','" + str(ldr) + "','" + str(hum) + "');")
+        curs.execute(query_string)
+        conn.commit()
+        curs.close()
+        conn.close()
+
+# Get reading from photoreceptor
 
 def getLight():
 	lightCount = 0
@@ -115,17 +128,17 @@ def getLight():
 
 # Main function
 
-db = "/var/www/Log.db"
-
 def main():
 
 	timestamp = strftime("%Y-%m-%d %H:%M:00")
 	temperature = readTemp('28-00000457fd20')
+	# No second ds18b20 at present
+	#temperature1 = readTemp('28-000004024b05')
 	light = getLight()
         
 	# Get data from DHT sensor with Adafruit code
 	try:
-                humidity, temperature2 = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 22)
+                humidity, temperature2 = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 23)
                 humidity = ("%.2f" % humidity)
                 temperature2 = ("%.3f" % temperature2)
         except:
@@ -140,26 +153,30 @@ def main():
 
 		print "timestamp:    ", str(timestamp)
 		print "temperature:  ", str(temperature)
+		print "temperature1: ", str(temperature1)
 		print "temperature2: ", str(temperature2)
 		print "light:        ", str(light)
-		print "humidity:     ", str(humidity)
-		print "present:      ", str(present)
+		print "humidity      ", str(humidity)
 
 	elif (sys.argv[1] == "sql"):
 		ledFlash(3)
-		write_log_sql(db,timestamp,temperature,temperature2,light,humidity,present)
+		write_log_sql(timestamp,temperature,temperature1,temperature2,light,humidity)
 
 	elif (sys.argv[1] == "csl"):
                 ledFlash(3)
-                write_log_csv(timestamp,temperature,temperature2,light,humidity,present)
+                write_log_csv(timestamp,temperature,temperature1,temperature2,light,humidity)
+
+	elif (sys.argv[1] == "psql"):
+		ledFlash(3)
+		write_log_psql(rpi,timestamp,temperature,temperature2,temperature1,light,humidity)	
 
 	elif (sys.argv[1] == "all"):
                 ledFlash(3)
-                write_log_csv(timestamp,temperature,temperature2,light,humidity,present)
-                write_log_sql(db,timestamp,temperature,temperature2,light,humidity,present)
-
+                write_log_csv(timestamp,temperature,temperature1,temperature2,light,humidity)
+                write_log_sql(timestamp,temperature,temperature1,temperature2,light,humidity)
+		write_log_psql(rpi,timestamp,temperature,temperature2,temperature1,light,humidity)
 	else:
-		print "Must take a single argument: test, sql, csl, or all."
+		print "Must take a single argument: test, sql, csl, pql, or all."
 
 if __name__ == '__main__':
 	main()
