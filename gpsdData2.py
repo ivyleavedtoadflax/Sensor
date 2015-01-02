@@ -29,6 +29,10 @@ if __name__ == '__main__':
   try:
     gpsp.start() # start it up
 
+# Deviation fron Dan Mandle code here:
+# attempt to get a fix 100 times at 0.05 s intervals.
+# If this fails, break out
+
     i = 0
 
     while (i < 100):
@@ -46,7 +50,8 @@ if __name__ == '__main__':
   except:
     pass
 
-# define logging function
+
+# Define logging function.
 
 def logGPStoSQL():
 	try:
@@ -58,7 +63,7 @@ def logGPStoSQL():
 	except:
 		pass
 
-# check for test mode and print to screen if enable
+# Check for test mode and print to screen if enabled, without logging to sql
 
 def main():
 	if (len(sys.argv) == 0):

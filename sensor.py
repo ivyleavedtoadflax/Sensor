@@ -6,8 +6,6 @@ from time import strftime
 from socket import gethostname
 import string, os, sys, Adafruit_DHT, sqlite3, psycopg2, server_cred
 
-#import smtplib, string, os
-
 #	(ORANGE) 3.3v	[][]	5v (RED)
 #	I2C0 SDA	[][]	DO NOT CONNECT
 #	I2C0 SCL	[][]	GROUND (BLACK)
@@ -36,6 +34,8 @@ pin1 = 4        # Temperature sensor
 pin2 = 17       # LED
 pin4 = 18       # Photoresistor 
 
+# Don't need to assign pin for DHT - this is dealt with in adafruit code
+
 # pin 23 = DHT          
 
 # Setup outputs
@@ -44,7 +44,8 @@ GPIO.setup(pin2, GPIO.OUT)
 GPIO.setup(pin4, GPIO.OUT)
 # GPIO.setup(pin5, GPIO.IN)
 
-# set initial pin states
+# Set initial pin states. Wired led on pin2 the wrong way so start high and go low!
+
 GPIO.output(pin2, GPIO.HIGH)
 GPIO.output(pin4, GPIO.LOW)
 
@@ -60,6 +61,8 @@ rpi = gethostname()
 
 
 # Define functions
+
+# This code is adapted from here: https://www.cl.cam.ac.uk/projects/raspberrypi/tutorials/temperature/
 
 def readTemp(w1):
 	try:
@@ -114,7 +117,6 @@ def write_log_psql(rpi,ts,int_temp1,int_temp2,ext_temp1,ldr,hum):
         conn.close()
 
 # Get reading from photoreceptor
-
 
 def getLight():
 	lightCount = 0
