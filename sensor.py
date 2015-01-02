@@ -3,10 +3,8 @@
 import RPi.GPIO as GPIO
 from time import sleep
 from time import strftime
-import string, os, sys
-import Adafruit_DHT
-import sqlite3
-
+from socket import gethostname
+import string, os, sys, Adafruit_DHT, sqlite3, psycopg2, server_cred
 
 #import smtplib, string, os
 
@@ -58,6 +56,8 @@ temperature1 = "NA"
 temperature2 = "NA"
 light = 0 # must be numeric
 humidity = "NA"
+rpi = gethostname()
+
 
 # Define functions
 
@@ -99,6 +99,18 @@ def write_log_sql(ts,temp,temp1,temp2,ldr,hum):
         curs = conn.cursor()
 	curs.execute("INSERT INTO SensorPiB values('" + str(ts) + "','" + str(temp) + "','" + str(temp1) + "','" + str(temp2) + "','" + str(ldr) + "','" +  str(hum) + "')")
         conn.commit()
+        conn.close()
+
+def write_log_psql(rpi,ts,int_temp1,int_temp2,ext_temp1,ldr,hum):
+
+        # server_cred must be present and in correct format, see below:
+        conn_string = str("dbname = '"+ server_cred.db_name + "' user = '" + server_cred.username + "' host = '" + server_cred.host_ip + "' password = '" + server_cred.password + "'")
+        conn = psycopg2.connect(conn_string)
+        curs = conn.cursor()
+        query_string = str("INSERT INTO sensorpi values('" + str(rpi) + "','" + str(ts) + "','" + str(int_temp1) + "','" + str(int_temp2) + "','" + str(ext_temp1) + "','" + str(ldr) + "','" + str(hum) + "');")
+        curs.execute(query_string)
+        conn.commit()
+        curs.close()
         conn.close()
 
 # Get reading from photoreceptor
@@ -151,13 +163,17 @@ def main():
                 ledFlash(3)
                 write_log_csv(timestamp,temperature,temperature1,temperature2,light,humidity)
 
+	elif (sys.argv[1] == "psql"):
+		ledFlash(3)
+		write_log_psql(rpi,timestamp,temperature,temperature2,temperature1,light,humidity)	
+
 	elif (sys.argv[1] == "all"):
                 ledFlash(3)
                 write_log_csv(timestamp,temperature,temperature1,temperature2,light,humidity)
                 write_log_sql(timestamp,temperature,temperature1,temperature2,light,humidity)
-
+		write_log_psql(rpi,timestamp,temperature,temperature2,temperature1,light,humidity)
 	else:
-		print "Must take a single argument: test, sql, csl, or all."
+		print "Must take a single argument: test, sql, csl, pql, or all."
 
 if __name__ == '__main__':
 	main()
