@@ -53,7 +53,7 @@ GPIO.output(pin4, GPIO.LOW)
 
 timestamp = "NA"
 temperature = "NA"
-temperature1 = "NA"
+temperature1 = 999
 temperature2 = "NA"
 light = 0 # must be numeric
 humidity = "NA"
@@ -138,7 +138,7 @@ def main():
         
 	# Get data from DHT sensor with Adafruit code
 	try:
-                humidity, temperature2 = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 23)
+                humidity, temperature2 = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 22)
                 humidity = ("%.2f" % humidity)
                 temperature2 = ("%.3f" % temperature2)
         except:
