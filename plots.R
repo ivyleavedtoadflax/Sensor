@@ -1,6 +1,4 @@
 
-require(chron)
-
 ##################### Temperature Log File first
 
 # Check that file log file exists in folder!
@@ -29,7 +27,8 @@ require(chron)
      
      # convert date and time to chron objects
      
-     a$timestamp <- times(as.character(a$timestamp),format = "Y-M-D h:m:s")
+     a$timestamp <- as.POSIXct(strptime(a$timestamp, "%Y-%m-%d %H:%M:%S"))
+     
      
      #a$timestamp <- chron(a$date,a$time)
      
