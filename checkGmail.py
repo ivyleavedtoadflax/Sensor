@@ -7,8 +7,8 @@ def check():
 	import time, imaplib, email  # could be email not mail
 	import sendLog
 
-	USERNAME = "ivyleavedtoadflax" # just the part before the @ sign, add yours here
-	PASSWORD = "wpyyilflczbrnfzt"
+	USERNAME = "" # just the part before the @ sign, add yours here
+	PASSWORD = ""
 
 	# read subject line
 
