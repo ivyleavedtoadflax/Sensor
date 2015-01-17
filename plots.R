@@ -5,9 +5,7 @@ require(chron)
 
 # Check that file log file exists in folder!
 
-     png("/home/pi/Sensor/Log.png",width=6,height=15,unit="in",res=200)
 
-     par(mfrow=c(3,1))
      
      a <- read.csv(
      "Log.csv", 
@@ -61,6 +59,8 @@ require(chron)
 				max(int_temp2$int_temp2),
 				max(ext_temp1$ext_temp1)
 				)  * 0.975
+     png("/home/pi/Sensor/Log.png",width=6,height=15,unit="in",res=200)
+     par(mfrow=c(3,1))
 				
      par(
      mar = c( 5.1, 4.1, 3.1, 4.1),
