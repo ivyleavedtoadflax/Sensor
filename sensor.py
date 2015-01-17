@@ -46,7 +46,7 @@ GPIO.setup(pin4, GPIO.OUT)
 
 # Set initial pin states. Wired led on pin2 the wrong way so start high and go low!
 
-GPIO.output(pin2, GPIO.HIGH)
+GPIO.output(pin2, GPIO.LOW)
 GPIO.output(pin4, GPIO.LOW)
 
 # Set all variables to NA
@@ -79,13 +79,13 @@ def readTemp(w1):
 
 # Run data recording LED init sequence
 
-def ledFlash(i):	
+def ledFlash(i,j):	
 	ledCount = 0
 	while ledCount < i:
-		GPIO.output(pin2, GPIO.LOW)
-		sleep(0.2)
 		GPIO.output(pin2, GPIO.HIGH)
-		sleep(0.2)
+		sleep(j)
+		GPIO.output(pin2, GPIO.LOW)
+		sleep(j)
 		ledCount +=1
 
 # log data in text file
@@ -100,7 +100,7 @@ def write_log_csv(ts,temp,temp1,temp2,ldr,hum):
 def write_log_sql(ts,temp,temp1,temp2,ldr,hum):
         conn = sqlite3.connect("/var/www/Log.db")
         curs = conn.cursor()
-	curs.execute("INSERT INTO SensorPiB values('" + str(ts) + "','" + str(temp) + "','" + str(temp1) + "','" + str(temp2) + "','" + str(ldr) + "','" +  str(hum) + "')")
+	curs.execute("INSERT INTO temp values('" + str(ts) + "','" + str(temp) + "','" + str(temp1) + "','" + str(temp2) + "','" + str(ldr) + "','" +  str(hum) + "')")
         conn.commit()
         conn.close()
 
@@ -149,7 +149,7 @@ def main():
 
 	elif (sys.argv[1] == "test"):
 
-		ledFlash(1)		
+		ledFlash(1,0.2)		
 
 		print "timestamp:    ", str(timestamp)
 		print "temperature:  ", str(temperature)
@@ -159,22 +159,25 @@ def main():
 		print "humidity      ", str(humidity)
 
 	elif (sys.argv[1] == "sql"):
-		ledFlash(3)
+		ledFlash(3,0.2)
 		write_log_sql(timestamp,temperature,temperature1,temperature2,light,humidity)
 
 	elif (sys.argv[1] == "csl"):
-                ledFlash(3)
+                ledFlash(3,0.2)
                 write_log_csv(timestamp,temperature,temperature1,temperature2,light,humidity)
 
 	elif (sys.argv[1] == "psql"):
-		ledFlash(3)
+		ledFlash(3,0.2)
 		write_log_psql(rpi,timestamp,temperature,temperature2,temperature1,light,humidity)	
 
 	elif (sys.argv[1] == "all"):
-                ledFlash(3)
-                write_log_csv(timestamp,temperature,temperature1,temperature2,light,humidity)
-                write_log_sql(timestamp,temperature,temperature1,temperature2,light,humidity)
-		write_log_psql(rpi,timestamp,temperature,temperature2,temperature1,light,humidity)
+		try:
+			ledFlash(3,0.2)
+			write_log_csv(timestamp,temperature,temperature1,temperature2,light,humidity)
+			write_log_sql(timestamp,temperature,temperature1,temperature2,light,humidity)
+			write_log_psql(rpi,timestamp,temperature,temperature2,temperature1,light,humidity)
+		except:
+			ledFlash(20,0.15)
 	else:
 		print "Must take a single argument: test, sql, csl, pql, or all."
 
