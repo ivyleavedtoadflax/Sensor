@@ -144,7 +144,7 @@ def main():
                 pass
 
 	if (len(sys.argv) == 0):
-		print "Must take a single argument: test, sql, csl or all."
+		print "Must take a single argument: test, sql, csv or all."
 
 	elif (sys.argv[1] == "test"):
 
@@ -161,7 +161,7 @@ def main():
 		ledFlash(3)
 		write_log_sql(timestamp,temperature,temperature1,temperature2,light,humidity)
 
-	elif (sys.argv[1] == "csl"):
+	elif (sys.argv[1] == "csv"):
                 ledFlash(3)
                 write_log_csv(timestamp,temperature,temperature1,temperature2,light,humidity)
 
