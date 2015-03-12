@@ -48,3 +48,49 @@ here the `-y` flag will just download everything without asking you again.
 Next python:
 
 `sudo apt-get install python-dev python-rpi.gpio -y`
+
+## GPS
+
+I'm using an Adafruit ultimate GPS module attached over UART. You need to run the following:
+
+```
+sudo apt-get install gpsd gpsd-clients python-gps
+sudo gpsd /dev/ttyAMA0 -F /var/run/gpsd.sock
+```
+
+and then the gps should be visible, in my case on ```/dev/ttyAMA0```, which you can ```cat``` to see the latest data stream. 
+
+To make the gps (GPS demon) run at startup, you need to run:
+
+```sudo dpkg-reconfigure gpsd```
+
+and follow the onscreen prompts. Answer NO when it asks you whether you want it to manage USB GPS devices, as we are using UART.
+
+Attempting to do this caused an error for me relating to the mathkernel. This can be fixed follow the instructions at the forum post [here](http://www.raspberrypi.org/forums/viewtopic.php?f=66&t=68263). essentially, you must add:
+
+```
+### BEGIN INIT INFO
+# Provides:          mathkernel
+# Required-Start:    $local_fs 
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: mathkernel
+### END INIT INFO
+```
+to the file ```/etc/init.d/mathkernel```  after the shebang:
+
+```
+ #!bin/sh 
+```
+
+## Crontab
+
+Rather than run an infinite python loop, I have started using crontab to run each of the python scripts independently at various intervals. This makes it easier to link up the data collected by varuious raspberry pis, as the timestamps will be the same. The crontab file looks like this:
+
+```
+# m h  dom mon dow   command
+  */3 * * * *     cd ~/Sensor/; sudo python sensor.py
+  */10 * * * *     cd ~/Sensor/; sudo python gpsdData2.py
+  */15 * * * *  cd ~/Sensor/; sudo python db.py
+```
