@@ -93,4 +93,7 @@ Rather than run an infinite python loop, I have started using crontab to run eac
   */3 * * * *     cd ~/Sensor/; sudo python sensor.py
   */10 * * * *     cd ~/Sensor/; sudo python gpsdData2.py
   */15 * * * *  cd ~/Sensor/; sudo python db.py
+  @reboot sudo modprobe w1-gpio
+  @reboot sudo modprobe w1-therm
+  
 ```
