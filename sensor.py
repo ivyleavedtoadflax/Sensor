@@ -12,7 +12,6 @@ import smtplib, string, os
 =======
 from socket import gethostname
 import string, os, sys, Adafruit_DHT, sqlite3, psycopg2, server_cred
->>>>>>> 3a952b2007f2c4bf4f75ca4a2f74c992092db743
 
 #	(ORANGE) 3.3v	[][]	5v (RED)
 #	I2C0 SDA	[][]	DO NOT CONNECT
