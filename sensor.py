@@ -3,13 +3,9 @@
 import RPi.GPIO as GPIO
 from time import sleep
 from time import strftime
-<<<<<<< HEAD
 from subprocess import call
 from subprocess import check_output
-#from checkGmail import check
 from re import search
-import smtplib, string, os
-=======
 from socket import gethostname
 import string, os, sys, Adafruit_DHT, sqlite3, psycopg2, server_cred
 
