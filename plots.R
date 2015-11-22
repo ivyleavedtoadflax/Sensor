@@ -51,7 +51,7 @@
 				min(int_temp2$int_temp2),
 				min(ext_temp1$ext_temp1)
 				)  * 0.975
-     png("/home/pi/Sensor/Log.png",width=6,height=12,unit="in",res=200)
+     pdf("/home/pi/Sensor/Log.pdf",width=6,height=12)
      par(mfrow=c(3,1))
 				
      par(
@@ -63,7 +63,7 @@
           int_temp1$timestamp,
           int_temp1$int_temp1,
           xlab = "Date/Time",
-          ylab = expression(Internal~temperature~(degree~C)),
+          ylab = expression(Temperature~(degree~C)),
           pch = 16,
           col = "blue",
           type = "n",

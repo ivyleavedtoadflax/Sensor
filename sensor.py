@@ -91,30 +91,37 @@ def ledFlash(i):
 # log data in text file
 
 def write_log_csv(ts,temp,temp1,temp2,ldr,hum):
-        log = open("/home/pi/Sensor/Log.csv", "a")
-	log.write("\n" + str(ts) + "," + str(temp) + "," + str(temp1) + "," + str(temp2) + "," + str(ldr) + "," + str(hum))
-	log.close()
-
+	try:
+        	log = open("/home/pi/Sensor/Log.csv", "a")
+		log.write("\n" + str(ts) + "," + str(temp) + "," + str(temp1) + "," + str(temp2) + "," + str(ldr) + "," + str(hum))
+		log.close()
+	except:
+		pass
 # Log into /www/var/Log.db - sqlite3 database
 
 def write_log_sql(ts,temp,temp1,temp2,ldr,hum):
-        conn = sqlite3.connect("/var/www/SensorPiB.db")
-        curs = conn.cursor()
-	curs.execute("INSERT INTO SensorPiB values('" + str(ts) + "','" + str(temp) + "','" + str(temp1) + "','" + str(temp2) + "','" + str(ldr) + "','" +  str(hum) + "')")
-        conn.commit()
-        conn.close()
+        try:
+		conn = sqlite3.connect("/var/www/SensorPiB.db")
+	        curs = conn.cursor()
+		curs.execute("INSERT INTO SensorPiB values('" + str(ts) + "','" + str(temp) + "','" + str(temp1) + "','" + str(temp2) + "','" + str(ldr) + "','" +  str(hum) + "')")
+	        conn.commit()
+	        conn.close()
+	except:
+		pass
 
 def write_log_psql(rpi,ts,int_temp1,int_temp2,ext_temp1,ldr,hum):
-
-        # server_cred must be present and in correct format, see below:
-        conn_string = str("dbname = '"+ server_cred.db_name + "' user = '" + server_cred.username + "' host = '" + server_cred.host_ip + "' password = '" + server_cred.password + "'")
-        conn = psycopg2.connect(conn_string)
-        curs = conn.cursor()
-        query_string = str("INSERT INTO sensorpi values('" + str(rpi) + "','" + str(ts) + "','" + str(int_temp1) + "','" + str(int_temp2) + "','" + str(ext_temp1) + "','" + str(ldr) + "','" + str(hum) + "');")
-        curs.execute(query_string)
-        conn.commit()
-        curs.close()
-        conn.close()
+	try:
+        	# server_cred must be present and in correct format, see below:
+	        conn_string = str("dbname = '"+ server_cred.db_name + "' user = '" + server_cred.username + "' host = '" + server_cred.host_ip + "' password = '" + server_cred.password + "'")
+	        conn = psycopg2.connect(conn_string)
+	        curs = conn.cursor()
+	        query_string = str("INSERT INTO sensorpi values('" + str(rpi) + "','" + str(ts) + "','" + str(int_temp1) + "','" + str(int_temp2) + "','" + str(ext_temp1) + "','" + str(ldr) + "','" + str(hum) + "');")
+	        curs.execute(query_string)
+	        conn.commit()
+	        curs.close()
+	        conn.close()
+	except:
+		pass
 
 # Get reading from photoreceptor
 
